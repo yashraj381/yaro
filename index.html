@@ -3,85 +3,113 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Yaro - Personal Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     body {
-      background: linear-gradient(to right, #141e30, #243b55);
-      color: white;
+      font-family: 'Orbitron', sans-serif;
+      background: radial-gradient(circle, #0f2027, #203a43, #2c5364);
+      color: #00ffe7;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
+      overflow: hidden;
     }
     .container {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.6);
       padding: 30px;
       border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 25px #00ffe7;
       width: 90%;
       max-width: 600px;
+      animation: fadeIn 1.5s ease;
     }
     h1 {
       text-align: center;
       margin-bottom: 20px;
       color: #00ffe7;
+      text-shadow: 0 0 10px #00ffe7;
+      animation: pulse 2s infinite;
     }
     #chatBox {
       height: 300px;
       overflow-y: auto;
-      padding: 10px;
-      background: #1a2936;
+      padding: 15px;
+      background: #1a1a2e;
+      border: 2px solid #00ffe7;
       border-radius: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+      scroll-behavior: smooth;
     }
     .message {
       margin: 10px 0;
+      padding: 8px 12px;
+      border-radius: 10px;
+      max-width: 80%;
+      word-wrap: break-word;
     }
     .user {
-      text-align: right;
-      color: #aaffaa;
+      align-self: flex-end;
+      background: #009688;
+      color: #fff;
+      margin-left: auto;
     }
     .yaro {
-      text-align: left;
-      color: #ffcc99;
+      align-self: flex-start;
+      background: #263238;
+      color: #00ffe7;
     }
     #userInput {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       border-radius: 10px;
-      border: none;
+      border: 2px solid #00ffe7;
+      background: #0f172a;
+      color: #fff;
+      font-size: 16px;
     }
     button {
       margin-top: 10px;
-      padding: 10px 20px;
+      padding: 12px 20px;
       border: none;
       background-color: #00ffe7;
       color: #000;
       border-radius: 10px;
       cursor: pointer;
       font-weight: bold;
+      transition: 0.3s ease;
+      width: 100%;
     }
     button:hover {
-      background-color: #00d8c1;
+      background-color: #00c8b3;
+      transform: scale(1.05);
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    @keyframes pulse {
+      0%, 100% { text-shadow: 0 0 10px #00ffe7; }
+      50% { text-shadow: 0 0 20px #00ffe7; }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Yaro - आपका सहायक</h1>
+    <h1>Yaro - आपका रोबोट सहायक</h1>
     <div id="chatBox"></div>
     <input type="text" id="userInput" placeholder="अपना सवाल लिखें...">
     <button onclick="sendMessage()">भेजें</button>
   </div>  <script>
     const manualQA = {
       "तुम कौन हो": "मैं यारो हूँ, आपका व्यक्तिगत सहायक।",
-      "तुम क्या कर सकते हो": "मैं आपकी मदद कर सकता हूँ सवालों के जवाब देने में, मौसम बताने में, और बहुत कुछ!"
+      "तुम क्या कर सकते हो": "मैं आपकी मदद कर सकता हूँ सवालों के जवाब देने में, और बहुत कुछ!"
     };
 
     async function sendMessage(inputText = null) {
@@ -111,30 +139,13 @@
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    async function fetchOpenAI(prompt) {
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer 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"
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [{ role: "user", content: prompt }],
-          temperature: 0.7
-        })
-      });
-      const data = await res.json();
-      return data.choices[0].message.content;
-    }
-
     async function speakWithElevenLabs(text) {
-      const response = await fetch("https://api.elevenlabs.io/v1/text-to-speech/pzxut4zZz4GImZNlqQ3H", {
+      const response = await fetch("https://api.elevenlabs.io/v1/text-to-speech/zgqefOY5FPQ3bB7OZTVR", {
         method: "POST",
         headers: {
           "Accept": "audio/mpeg",
           "Content-Type": "application/json",
-          "xi-api-key": "Bearer sk_27c43833e676ef581926b59ed03997c58c3c0a227efeb0fc"
+          "xi-api-key": "sk_27c43833e676ef581926b59ed03997c58c3c0a227efeb0fc"
         },
         body: JSON.stringify({
           text: text,
@@ -152,7 +163,34 @@
       audio.play();
     }
 
-    // Continuous Speech Recognition
+    async function fetchOpenAI(prompt) {
+      try {
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer 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"
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.7
+          })
+        });
+
+        const data = await res.json();
+
+        if (data.choices && data.choices[0]) {
+          return data.choices[0].message.content;
+        } else {
+          return "माफ़ कीजिए, मुझे इसका उत्तर नहीं मिला।";
+        }
+      } catch (error) {
+        console.error("OpenAI Error:", error);
+        return "सर्वर में कुछ गड़बड़ हो गई है। कृपया बाद में कोशिश करें।";
+      }
+    }
+
     window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
     recognition.lang = 'hi-IN';
@@ -170,7 +208,7 @@
     };
 
     recognition.onend = () => {
-      recognition.start(); // keep listening
+      recognition.start();
     };
 
     recognition.start();
