@@ -1,136 +1,178 @@
-<!DOCTYPE html>
-<html lang="hi">
+<!DOCTYPE html><html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>YARO - हिंदी वॉइस असिस्टेंट</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yaro - Personal Assistant</title>
   <style>
-    body {
+    * {
       margin: 0;
       padding: 0;
-      font-family: 'Orbitron', sans-serif;
-      background: radial-gradient(circle, #0f172a, #020617);
-      color: #00f7ff;
-      height: 100vh;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: linear-gradient(to right, #141e30, #243b55);
+      color: white;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      overflow: hidden;
+      justify-content: center;
+      height: 100vh;
     }
-
-    h1 {
-      font-size: 3rem;
-      color: #00f7ff;
-      margin-bottom: 10px;
-      text-shadow: 0 0 10px #00f7ff;
-    }
-
-    .status-box {
-      background-color: #1e293b;
-      border: 2px solid #00f7ff44;
-      border-radius: 10px;
-      padding: 20px;
-      margin-top: 10px;
-      text-align: center;
-      width: 80%;
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      width: 90%;
       max-width: 600px;
-      font-size: 1.2rem;
-      box-shadow: 0 0 20px #00f7ff22;
     }
-
-    .mic {
-      margin-top: 40px;
-      width: 100px;
-      height: 100px;
-      background: #00f7ff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: pulse 2s infinite;
-      box-shadow: 0 0 30px #00f7ff88;
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #00ffe7;
     }
-
-    .mic::after {
-      content: "🎤";
-      font-size: 2.5rem;
+    #chatBox {
+      height: 300px;
+      overflow-y: auto;
+      padding: 10px;
+      background: #1a2936;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+    .message {
+      margin: 10px 0;
+    }
+    .user {
+      text-align: right;
+      color: #aaffaa;
+    }
+    .yaro {
+      text-align: left;
+      color: #ffcc99;
+    }
+    #userInput {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #00ffe7;
       color: #000;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
     }
-
-    @keyframes pulse {
-      0% { transform: scale(1); box-shadow: 0 0 10px #00f7ff88; }
-      50% { transform: scale(1.1); box-shadow: 0 0 25px #00f7ffcc; }
-      100% { transform: scale(1); box-shadow: 0 0 10px #00f7ff88; }
-    }
-
-    footer {
-      position: absolute;
-      bottom: 10px;
-      color: #94a3b8;
-      font-size: 0.9rem;
+    button:hover {
+      background-color: #00d8c1;
     }
   </style>
 </head>
 <body>
-  <h1>YARO</h1>
-  <div class="status-box" id="status">यारो तैयार है...</div>
-  <div class="mic"></div>
-
-  <footer>Developed by Yashraj — Powered by Hindi Voice AI</footer>
-
-  <script>
-    let userName = localStorage.getItem("yaro_username");
-
-    function speak(text) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "hi-IN";
-      speechSynthesis.speak(utterance);
-      document.getElementById("status").innerText = `यारो बोल रहा है: ${text}`;
-    }
-
-    function listen() {
-      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-      recognition.lang = "hi-IN";
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.start();
-
-      document.getElementById("status").innerText = "आप बोलिए, मैं सुन रहा हूँ...";
-
-      recognition.onresult = function(event) {
-        const speech = event.results[0][0].transcript;
-        handleUserInput(speech);
-      };
-
-      recognition.onerror = function() {
-        setTimeout(() => listen(), 1000);
-      };
-
-      recognition.onend = function() {
-        setTimeout(() => listen(), 500); // Restart listening
-      };
-    }
-
-    function handleUserInput(speech) {
-      if (!userName) {
-        userName = speech;
-        localStorage.setItem("yaro_username", userName);
-        speak(`नमस्ते ${userName}, मिलकर अच्छा लगा!`);
-      } else {
-        speak(`${userName}, आपने कहा: ${speech}`);
-      }
-    }
-
-    window.onload = () => {
-      if (!userName) {
-        speak("नमस्ते! कृपया अपना नाम बताइए।");
-      } else {
-        speak(`स्वागत है ${userName}, मैं यारो हूँ!`);
-      }
-      listen();
+  <div class="container">
+    <h1>Yaro - आपका सहायक</h1>
+    <div id="chatBox"></div>
+    <input type="text" id="userInput" placeholder="अपना सवाल लिखें...">
+    <button onclick="sendMessage()">भेजें</button>
+  </div>  <script>
+    const manualQA = {
+      "तुम कौन हो": "मैं यारो हूँ, आपका व्यक्तिगत सहायक।",
+      "तुम क्या कर सकते हो": "मैं आपकी मदद कर सकता हूँ सवालों के जवाब देने में, मौसम बताने में, और बहुत कुछ!"
     };
-  </script>
-</body>
+
+    async function sendMessage(inputText = null) {
+      const input = document.getElementById('userInput');
+      const msg = inputText || input.value.trim();
+      if (!msg) return;
+
+      addMessage('user', msg);
+      if (!inputText) input.value = '';
+
+      let response = manualQA[msg];
+
+      if (!response) {
+        response = await fetchOpenAI(msg);
+      }
+
+      addMessage('yaro', response);
+      speakWithElevenLabs(response);
+    }
+
+    function addMessage(sender, text) {
+      const chatBox = document.getElementById('chatBox');
+      const div = document.createElement('div');
+      div.className = `message ${sender}`;
+      div.textContent = text;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function fetchOpenAI(prompt) {
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "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"
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.7
+        })
+      });
+      const data = await res.json();
+      return data.choices[0].message.content;
+    }
+
+    async function speakWithElevenLabs(text) {
+      const response = await fetch("https://api.elevenlabs.io/v1/text-to-speech/pzxut4zZz4GImZNlqQ3H", {
+        method: "POST",
+        headers: {
+          "Accept": "audio/mpeg",
+          "Content-Type": "application/json",
+          "xi-api-key": "sk_27c43833e676ef581926b59ed03997c58c3c0a227efeb0fc"
+        },
+        body: JSON.stringify({
+          text: text,
+          model_id: "eleven_multilingual_v2",
+          voice_settings: {
+            stability: 0.5,
+            similarity_boost: 0.8
+          }
+        })
+      });
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+    }
+
+    // Continuous Speech Recognition
+    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'hi-IN';
+    recognition.interimResults = false;
+    recognition.continuous = true;
+
+    recognition.onresult = (event) => {
+      const lastResult = event.results[event.results.length - 1];
+      const transcript = lastResult[0].transcript.trim();
+      sendMessage(transcript);
+    };
+
+    recognition.onerror = (e) => {
+      console.error('Speech Recognition Error:', e);
+    };
+
+    recognition.onend = () => {
+      recognition.start(); // keep listening
+    };
+
+    recognition.start();
+  </script></body>
 </html>
