@@ -1,149 +1,136 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <title>Yaro - हिंदी वॉइस असिस्टेंट</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YARO - हिंदी वॉइस असिस्टेंट</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: radial-gradient(circle, #0f172a, #020617);
+      color: #00f7ff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #00f7ff;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px #00f7ff;
+    }
+
+    .status-box {
+      background-color: #1e293b;
+      border: 2px solid #00f7ff44;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 10px;
       text-align: center;
-      padding: 30px;
-      background: #e6f2ff;
+      width: 80%;
+      max-width: 600px;
+      font-size: 1.2rem;
+      box-shadow: 0 0 20px #00f7ff22;
     }
 
-    .yaro-face {
-      width: 200px;
-      height: 200px;
-      margin: 20px auto;
+    .mic {
+      margin-top: 40px;
+      width: 100px;
+      height: 100px;
+      background: #00f7ff;
       border-radius: 50%;
-      background: radial-gradient(#fefefe 60%, #cccccc);
-      border: 4px solid #333;
-      position: relative;
-      animation: pulse 3s infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse 2s infinite;
+      box-shadow: 0 0 30px #00f7ff88;
     }
 
-    .eye {
-      width: 20px;
-      height: 20px;
-      background: #000;
-      border-radius: 50%;
-      position: absolute;
-      top: 60px;
-    }
-
-    .eye.left { left: 60px; }
-    .eye.right { right: 60px; }
-
-    .mouth {
-      width: 60px;
-      height: 30px;
-      border-radius: 0 0 60px 60px;
-      background: #000;
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
+    .mic::after {
+      content: "🎤";
+      font-size: 2.5rem;
+      color: #000;
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+      0% { transform: scale(1); box-shadow: 0 0 10px #00f7ff88; }
+      50% { transform: scale(1.1); box-shadow: 0 0 25px #00f7ffcc; }
+      100% { transform: scale(1); box-shadow: 0 0 10px #00f7ff88; }
     }
 
-    #status {
-      font-size: 18px;
-      color: #333;
-      margin-top: 20px;
+    footer {
+      position: absolute;
+      bottom: 10px;
+      color: #94a3b8;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <h1>यारो - आपका हिंदी सहायक</h1>
-  <div class="yaro-face" id="face">
-    <div class="eye left"></div>
-    <div class="eye right"></div>
-    <div class="mouth"></div>
-  </div>
-  <div id="status">Yaro सुन रहा है...</div>
+  <h1>YARO</h1>
+  <div class="status-box" id="status">यारो तैयार है...</div>
+  <div class="mic"></div>
+
+  <footer>Developed by Yashraj — Powered by Hindi Voice AI</footer>
 
   <script>
-    const apiKey = "sk_27c43833e676ef581926b59ed03997c58c3c0a227efeb0fc"; // Paste your API key here
-    const voiceId = "zgqefOY5FPQ3bB7OZTVR"; // Paste your Hindi male voice ID here
+    let userName = localStorage.getItem("yaro_username");
 
-    const statusDiv = document.getElementById("status");
-
-    function speakWithElevenLabs(text) {
-      statusDiv.textContent = "Yaro बोल रहा है...";
-      const face = document.getElementById("face");
-      face.style.animation = "pulse 0.5s infinite";
-
-      fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-        method: "POST",
-        headers: {
-          "xi-api-key": apiKey,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          text: text,
-          model_id: "eleven_multilingual_v2",
-          voice_settings: {
-            stability: 0.6,
-            similarity_boost: 0.8
-          }
-        })
-      })
-      .then(res => res.blob())
-      .then(audioBlob => {
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
-        audio.play();
-        audio.onended = () => {
-          statusDiv.textContent = "Yaro सुन रहा है...";
-          face.style.animation = "pulse 3s infinite";
-        };
-      });
+    function speak(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "hi-IN";
+      speechSynthesis.speak(utterance);
+      document.getElementById("status").innerText = `यारो बोल रहा है: ${text}`;
     }
 
-    function processCommand(text) {
-      const msg = text.toLowerCase();
+    function listen() {
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = "hi-IN";
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.start();
 
-      if (msg.includes("नाम")) {
-        speakWithElevenLabs("आपका नाम बहुत प्यारा है!");
-      } else if (msg.includes("कैसे हो")) {
-        speakWithElevenLabs("मैं बहुत अच्छा हूँ, धन्यवाद!");
-      } else if (msg.includes("अलार्म")) {
-        speakWithElevenLabs("अलार्म अभी नहीं सेट हो सकता, लेकिन मैं सीख रहा हूँ।");
-      } else if (msg.includes("खबर")) {
-        speakWithElevenLabs("अभी ताज़ा खबरें: यारो आपके साथ है!");
+      document.getElementById("status").innerText = "आप बोलिए, मैं सुन रहा हूँ...";
+
+      recognition.onresult = function(event) {
+        const speech = event.results[0][0].transcript;
+        handleUserInput(speech);
+      };
+
+      recognition.onerror = function() {
+        setTimeout(() => listen(), 1000);
+      };
+
+      recognition.onend = function() {
+        setTimeout(() => listen(), 500); // Restart listening
+      };
+    }
+
+    function handleUserInput(speech) {
+      if (!userName) {
+        userName = speech;
+        localStorage.setItem("yaro_username", userName);
+        speak(`नमस्ते ${userName}, मिलकर अच्छा लगा!`);
       } else {
-        speakWithElevenLabs("मुझे माफ कीजिए, मैं अभी तक वो नहीं समझ पाया।");
+        speak(`${userName}, आपने कहा: ${speech}`);
       }
     }
 
-    // Continuous Hindi voice recognition
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = "hi-IN";
-    recognition.continuous = true;
-    recognition.interimResults = false;
-
-    recognition.onresult = (event) => {
-      const lastResult = event.results[event.results.length - 1];
-      const text = lastResult[0].transcript.trim();
-      console.log("User said:", text);
-      processCommand(text);
+    window.onload = () => {
+      if (!userName) {
+        speak("नमस्ते! कृपया अपना नाम बताइए।");
+      } else {
+        speak(`स्वागत है ${userName}, मैं यारो हूँ!`);
+      }
+      listen();
     };
-
-    recognition.onerror = (e) => {
-      console.error("Error:", e);
-      recognition.stop();
-      setTimeout(() => recognition.start(), 2000); // restart after error
-    };
-
-    recognition.onend = () => {
-      recognition.start(); // auto-restart
-    };
-
-    recognition.start();
   </script>
 </body>
 </html>
