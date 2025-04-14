@@ -1,230 +1,30 @@
-<!DOCTYPE html><html lang="hi">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yaro - Mobile Assistant</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: radial-gradient(circle at top, #0f172a, #000);
-      color: #00ffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-    }
-    h1 {
-      margin: 10px;
-      font-size: 2rem;
-      text-align: center;
-      animation: glow 2s infinite alternate;
-    }
-    @keyframes glow {
-      from { text-shadow: 0 0 10px #00ffff; }
-      to { text-shadow: 0 0 20px #00ffff, 0 0 30px #00ffff; }
-    }
-    #yaro-face-container {
-      position: relative;
-      width: 150px;
-      height: 150px;
-      margin: 10px 0;
-      animation: float 3s ease-in-out infinite;
-    }
-    #yaro-face {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: 50%;
-      box-shadow: 0 0 30px #0ff;
-      transition: all 0.3s ease-in-out;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-    #chatbox {
-      flex: 1;
-      width: 90%;
-      max-width: 500px;
-      overflow-y: auto;
-      padding: 10px;
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 20px;
-      margin-bottom: 10px;
-    }
-    .bubble {
-      margin: 8px 0;
-      padding: 10px;
-      border-radius: 20px;
-      background: #1e293b;
-      max-width: 80%;
-      word-wrap: break-word;
-    }
-    .user { align-self: flex-end; background: #334155; }
-    .yaro { align-self: flex-start; background: #0f766e; }
-    #inputArea {
-      display: flex;
-      width: 90%;
-      max-width: 500px;
-      margin-bottom: 10px;
-    }
-    input {
-      flex: 1;
-      padding: 10px;
-      font-size: 1rem;
-      border-radius: 10px;
-      border: none;
-      outline: none;
-    }
-    button {
-      padding: 10px;
-      margin-left: 8px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 10px;
-      background: #06b6d4;
-      color: white;
-      cursor: pointer;
-    }
-  </style>
+    <title>Yaro Assistant</title>
 </head>
 <body>
-  <h1>यारो - आपका AI सहायक</h1>
-  <div id="yaro-face-container">
-    <img id="yaro-face" src="yaro-listening.png" alt="Yaro Robot Face">
-  </div>
-  <div id="chatbox"></div>
-  <div id="inputArea">
-    <input type="text" id="userInput" placeholder="यहाँ टाइप करें...">
-    <button onclick="handleInput()">पूछें</button>
-  </div>  <script>
-    const manualQA = {
-      "तुम कौन हो": "मैं यारो हूँ, आपका AI सहायक।",
-      "भारत की राजधानी": "भारत की राजधानी नई दिल्ली है।",
-      "तुम क्या कर सकते हो": "मैं सवालों के जवाब दे सकता हूँ और आपकी मदद कर सकता हूँ।"
-    };
+    <h2>Yaro से सवाल पूछो (हिंदी में)</h2>
+    <input type="text" id="userInput" placeholder="सवाल लिखो..." />
+    <button onclick="askYaro()">पूछो</button>
+    <p><strong>Yaro:</strong> <span id="yaroReply"></span></p>
 
-    const elevenKey = "sk_27c43833e676ef581926b59ed03997c58c3c0a227efeb0fc";
-    const voiceId = "zgqefOY5FPQ3bB7OZTVR";
-    const openaiKey = "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";
+    <script>
+        async function askYaro() {
+            const input = document.getElementById("userInput").value;
+            const response = await fetch("http://localhost:5000/ask", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: input })
+            });
 
-    const faceImg = document.getElementById("yaro-face");
-    const chatbox = document.getElementById("chatbox");
-    const userInput = document.getElementById("userInput");
-
-    const faces = {
-      listening: "yaro-listening.png",
-      thinking: "yaro-thinking.png",
-      speaking: "yaro-speaking.png",
-      idle: "yaro-idle.png"
-    };
-
-    function setFace(state) {
-      faceImg.src = faces[state] || faces.listening;
-    }
-
-    function appendMessage(text, sender) {
-      const msg = document.createElement("div");
-      msg.className = `bubble ${sender}`;
-      msg.innerText = text;
-      chatbox.appendChild(msg);
-      chatbox.scrollTop = chatbox.scrollHeight;
-    }
-
-    function handleInput() {
-      const text = userInput.value.trim();
-      if (!text) return;
-      appendMessage(text, "user");
-      respond(text);
-      userInput.value = "";
-    }
-
-    function respond(text) {
-      setFace("thinking");
-      const answer = manualQA[text.toLowerCase()];
-      if (answer) {
-        appendMessage(answer, "yaro");
-        speak(answer);
-      } else {
-        fetchOpenAI(text);
-      }
-    }
-
-    function speak(text) {
-      recognition.stop();
-      setFace("speaking");
-      fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-        method: "POST",
-        headers: {
-          "xi-api-key": elevenKey,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ text: text, voice_settings: { stability: 0.5, similarity_boost: 0.8 } })
-      })
-      .then(res => res.blob())
-      .then(blob => {
-        const audio = new Audio(URL.createObjectURL(blob));
-        audio.play();
-        audio.onended = () => {
-          setFace("listening");
-          recognition.start();
-        };
-      })
-      .catch(() => {
-        setFace("listening");
-        recognition.start();
-      });
-    }
-
-    function fetchOpenAI(query) {
-      fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${openaiKey}`
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [{ role: "user", content: query }],
-          temperature: 0.7
-        })
-      })
-      .then(res => res.json())
-      .then(data => {
-        const reply = data.choices?.[0]?.message?.content;
-        appendMessage(reply, "yaro");
-        speak(reply);
-      });
-    }
-
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = "hi-IN";
-    recognition.continuous = true;
-    recognition.interimResults = false;
-
-    recognition.onresult = (event) => {
-      const result = event.results[event.results.length - 1][0].transcript;
-      appendMessage(result, "user");
-      respond(result);
-    };
-
-    recognition.onerror = (e) => {
-      console.error("Speech error:", e.error);
-      setFace("idle");
-    };
-
-    recognition.onend = () => {
-      setFace("idle");
-      setTimeout(() => recognition.start(), 1000);
-    };
-
-    setFace("idle");
-    recognition.start();
-  </script></body>
+            const data = await response.json();
+            if (data.reply) {
+                document.getElementById("yaroReply").innerText = data.reply;
+            } else {
+                document.getElementById("yaroReply").innerText = "Error: " + data.error;
+            }
+        }
+    </script>
+</body>
 </html>
