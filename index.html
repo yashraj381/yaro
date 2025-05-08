@@ -1,15 +1,260 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yaro Assistant</title>
-    <script src="script.js" defer></script> <!-- JavaScript को HTML में जोड़ना -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yaro Chat</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #ffffff;
+  color: #000000;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.loader-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  flex-direction: column;
+}
+
+.loader {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.loader span {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #000;
+  animation: bounce 0.6s infinite alternate;
+}
+
+.loader span:nth-child(2) { background: #ff3c38; animation-delay: 0.2s; }
+.loader span:nth-child(3) { background: #ff8c00; animation-delay: 0.4s; }
+.loader span:nth-child(4) { background: #00bfff; animation-delay: 0.6s; }
+.loader span:nth-child(5) { background: #32cd32; animation-delay: 0.8s; }
+
+@keyframes bounce {
+  to {
+    transform: translateY(-15px);
+    opacity: 0.5;
+  }
+}
+
+.loader-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #ffffff;
+  color: #000000;
+  padding: 10px 16px 34px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: normal;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.header-title {
+  position: absolute;
+  left: 20px;
+  top: 10px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.chat-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 80px 20px 20px;
+  overflow-y: auto;
+  animation: fadeInBody 1.2s ease-in-out forwards;
+}
+
+@keyframes fadeInBody {
+  0% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.message {
+  max-width: 60%;
+  padding: 12px 16px;
+  border-radius: 20px;
+  margin: 8px 0;
+  line-height: 1.5;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.user {
+  background: #000000;
+  color: #ffffff;
+  align-self: flex-end;
+  border-bottom-right-radius: 0;
+}
+
+.bot {
+  background: #f0f0f0;
+  align-self: flex-start;
+  border-bottom-left-radius: 0;
+}
+
+.input-area {
+  display: flex;
+  padding: 10px;
+  background: #ffffff;
+  border-top: 1px solid #ccc;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  outline: none;
+  color: #000;
+  background: #fff;
+}
+
+.input-area button {
+  padding: 12px 18px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 20px;
+  background: #000000;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.typing {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30px auto;
+}
+
+.typing span {
+  height: 10px;
+  width: 10px;
+  margin: 0 5px;
+  background: #ccc;
+  border-radius: 50%;
+  display: inline-block;
+  animation: bounce 0.6s infinite alternate;
+}
+
+.typing span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+  </style>
 </head>
 <body>
-    <h2>Yaro से सवाल पूछो:</h2>
-    <input type="text" id="userInput" placeholder="सवाल लिखो..." />
-    <button onclick="askYaro()">पूछो</button>
-    <p><strong>Yaro:</strong> <span id="yaroReply"></span></p>
-</body>
+  <div class="loader-wrapper" id="loader">
+    <div class="loader">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="loader-text">Yaro</div>
+  </div>  <div class="header">
+    <div class="header-title">Yaro</div>
+    Powered by Yashraj Pawar
+  </div>  <div class="chat-container" id="chat" style="display:none">
+    <div class="typing" id="typing" style="display: none;">
+      <span></span><span></span><span></span>
+    </div>
+  </div>  <div class="input-area" style="display:none" id="inputArea">
+    <input type="text" id="input" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>  <script>
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("input");
+    const typing = document.getElementById("typing");
+    const inputArea = document.getElementById("inputArea");
+    const loader = document.getElementById("loader");
+
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        loader.style.display = "none";
+        chat.style.display = "flex";
+        inputArea.style.display = "flex";
+      }, 2500);
+    });
+
+    const qaPairs = {
+      "hello": "Hi there! How can I help you today?",
+      "what is your name": "I'm Yaro, your smart assistant.",
+      "who made you": "I was created by Yashraj Pawar.",
+      "how are you": "I'm doing great! Thanks for asking.",
+      "bye": "Goodbye! Have a nice day."
+    };
+
+    function sendMessage() {
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      addMessage(msg, "user");
+      input.value = "";
+
+      typing.style.display = "flex";
+      chat.scrollTop = chat.scrollHeight;
+
+      setTimeout(() => {
+        typing.style.display = "none";
+        const reply = getAnswer(msg);
+        addMessage(reply, "bot");
+      }, 1000);
+    }
+
+    function getAnswer(question) {
+      const q = question.toLowerCase();
+      return qaPairs[q] || "Sorry, I don't know the answer to that.";
+    }
+
+    function addMessage(text, sender) {
+      const msg = document.createElement("div");
+      msg.className = `message ${sender}`;
+      msg.textContent = text;
+      chat.insertBefore(msg, typing);
+      chat.scrollTop = chat.scrollHeight;
+    }
+  </script></body>
 </html>
