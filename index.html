@@ -4,12 +4,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Yaro Assistant</title>
   <style>
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: 'Segoe UI', sans-serif;
     }body {
+      #center-prompt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 28px;
+  font-weight: bold;
+  color: #111;
+  padding: 20px 30px;
+  border-radius: 16px;
+  border: 2px solid transparent;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(255, 153, 51, 0.4);
+  animation: pulseGlow 3s infinite ease-in-out;
+  user-select: none;
+  pointer-events: none;
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 153, 51, 0.4); /* Saffron */
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.7); /* White */
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(19, 136, 8, 0.5); /* Green */
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
   background: linear-gradient(-45deg, #ffffff, #e6e6ff, #ffe6e6, #e6fff2);
   background-size: 400% 400%;
   animation: gradientMove 15s ease infinite;
@@ -209,11 +242,30 @@ header {
       <div></div>
     </div>
   </div>  <header>Powered by Yashraj Pawar</header>
+  <div id="center-prompt">What can I help you with?</div>
+ 
+
+</div>
   <div class="chat-container" id="chat"></div>
   <div class="input-area">
     <input type="text" id="userInput" placeholder="Type your message..." />
     <button onclick="sendMessage()">Send</button>
+<button id="mic-launch" onclick="openVoicePage()">
+  <img src="https://img.icons8.com/ios-filled/24/ffffff/microphone.png" alt="Mic" />
+</button>
+
   </div>  <script>
+    window.addEventListener("load", () => {
+  const voiceInput = localStorage.getItem("voiceMessage");
+  if (voiceInput) {
+    localStorage.removeItem("voiceMessage");
+    addMessage(voiceInput, 'user');
+    processInput(voiceInput);
+  }
+});
+    function openVoicePage() {
+  window.location.href = "voice.html"; // or open a modal
+}
     const chat = document.getElementById('chat');
     const userInput = document.getElementById('userInput');
 
@@ -229,6 +281,10 @@ header {
       "how are you": "I'm always doing great! Thanks for asking.",
       "bye": "Goodbye! Have a great day!"
     };
+    let userMemory = {
+  name: null,
+    };
+
 function getClosestAnswer(userText) {
   const keywords = Object.keys(customQandA);
   const text = userText.toLowerCase();
@@ -270,7 +326,21 @@ function getClosestAnswer(userText) {
       if (!text) return;
       addMessage(text, 'user');
       userInput.value = '';
-      
+  document.getElementById("center-prompt").style.display = "none";    
+
+
+      // Remember name
+if (/my name is (.+)/i.test(text)) {
+  const name = text.match(/my name is (.+)/i)[1].trim();
+  userMemory.name = name;
+  showTyping(() => {
+    addMessage(`Nice to meet you, ${name}!`, 'bot');
+  });
+  return;
+}
+
+
+// (Add city, age, and "what is my name" logic here too)
       const lowerText = text.toLowerCase();
 
 if (lowerText.includes("time")) {
