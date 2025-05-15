@@ -178,6 +178,9 @@ header {
   gap: 5px;
   margin-left: 10px;
   margin-bottom: 10px;
+  margin-bottom: 10px;
+  margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .dot {
@@ -226,6 +229,21 @@ header {
       "how are you": "I'm always doing great! Thanks for asking.",
       "bye": "Goodbye! Have a great day!"
     };
+function getClosestAnswer(userText) {
+  const keywords = Object.keys(customQandA);
+  const text = userText.toLowerCase();
+
+  // Simple best-match scoring by keyword presence
+  for (let key of keywords) {
+    const words = key.toLowerCase().split(" ");
+    for (let word of words) {
+      if (text.includes(word)) {
+        return customQandA[key];
+      }
+    }
+  }
+  return null;
+}
 
     function addMessage(text, sender = 'user') {
       const msg = document.createElement('div');
@@ -252,12 +270,49 @@ header {
       if (!text) return;
       addMessage(text, 'user');
       userInput.value = '';
+      
+      const lowerText = text.toLowerCase();
 
+if (lowerText.includes("time")) {
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  showTyping(() => {
+    addMessage(`Time: ${time}`, "bot");
+  });
+  return;
+}
+
+if (lowerText.includes("date")) {
+  const date = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+  showTyping(() => {
+    addMessage(`Date: ${date}`, "bot");
+  });
+  return;
+}
+
+  // Check for calculator command
+  if (text.toLowerCase().startsWith("calculate")) {
+    const expression = text.replace(/calculate/i, "").trim();
+    try {
+      const result = eval(expression);
       showTyping(() => {
-        const reply = customQandA[text.toLowerCase()] || "I'm not sure how to answer that.";
-        addMessage(reply, 'bot');
+        addMessage(`Result: ${result}`, 'bot');
+      });
+    } catch {
+      showTyping(() => {
+        addMessage("Invalid calculation. Try again!", 'bot');
       });
     }
+    return;
+  }
+
+  // Default Q&A handling
+  showTyping(() => {
+    const direct = customQandA[text.toLowerCase()];
+const similar = getClosestAnswer(text);
+const reply = direct || similar || "I'm not sure how to answer that.";
+    addMessage(reply, 'bot');
+  });
+}
 
     userInput.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') sendMessage();
