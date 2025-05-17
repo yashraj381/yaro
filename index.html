@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,7 +22,41 @@
       height: 100vh;
       overflow: hidden;
     }
-
+    #banner-ad {
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 50px;
+      max-height: 60px;
+      background: transparent;
+      z-index: 10001;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      transition: bottom 0.3s;
+    }
+    #banner-ad .close-banner-btn {
+      position: absolute;
+      right: 10px;
+      top: 9px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #666;
+      cursor: pointer;
+      z-index: 10002;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 24px;
+      padding: 0;
+    }
     #center-prompt {
       position: absolute;
       top: 50%;
@@ -39,28 +74,25 @@
       user-select: none;
       pointer-events: none;
     }
-
     @keyframes pulseGlow {
       0% {
-        box-shadow: 0 0 10px rgba(255, 153, 51, 0.4); /* Saffron */
+        box-shadow: 0 0 10px rgba(255, 153, 51, 0.4);
         transform: translate(-50%, -50%) scale(1);
       }
       50% {
-        box-shadow: 0 0 25px rgba(255, 255, 255, 0.7); /* White */
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.7);
         transform: translate(-50%, -50%) scale(1.05);
       }
       100% {
-        box-shadow: 0 0 10px rgba(19, 136, 8, 0.5); /* Green */
+        box-shadow: 0 0 10px rgba(19, 136, 8, 0.5);
         transform: translate(-50%, -50%) scale(1);
       }
     }
-
     @keyframes gradientMove {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-
     .splash-screen {
       position: fixed;
       top: 0;
@@ -75,59 +107,49 @@
       z-index: 999;
       animation: fadeOut 2s ease 3s forwards;
     }
-
     .splash-screen img {
       width: 80px;
       margin-bottom: 20px;
     }
-
     .splash-screen h1 {
       font-size: 32px;
       color: #000;
       animation: popIn 1s ease;
     }
-
     .loader-bar {
       display: flex;
       gap: 8px;
       margin-top: 20px;
     }
-
     .loader-bar div {
       width: 12px;
       height: 12px;
       border-radius: 50%;
       animation: bounce 1.2s infinite ease-in-out both;
     }
-
     .loader-bar div:nth-child(1) {
-      background: #ff9933; /* saffron */
+      background: #ff9933;
       animation-delay: 0s;
     }
-
     .loader-bar div:nth-child(2) {
-      background: #ffffff; /* white */
+      background: #ffffff;
       border: 1px solid #000;
       animation-delay: 0.2s;
     }
-
     .loader-bar div:nth-child(3) {
-      background: #138808; /* green */
+      background: #138808;
       animation-delay: 0.4s;
     }
-
     @keyframes fadeOut {
       to {
         opacity: 0;
         visibility: hidden;
       }
     }
-
     @keyframes bounce {
       0%, 80%, 100% { transform: scale(0); }
       40% { transform: scale(1); }
     }
-
     header {
       text-align: center;
       padding: 10px;
@@ -138,7 +160,6 @@
       position: relative;
       z-index: 10;
     }
-
     .chat-container {
       flex: 1;
       padding: 15px;
@@ -146,8 +167,8 @@
       flex-direction: column;
       overflow-y: auto;
       z-index: 1;
+      margin-bottom: 60px; /* keep clear above banner */
     }
-
     .message {
       max-width: 80%;
       padding: 12px 16px;
@@ -157,24 +178,20 @@
       animation: popIn 0.3s ease;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-
     .message.user {
       align-self: flex-end;
       background-color: #dcf8c6;
       color: #000;
     }
-
     .message.bot {
       align-self: flex-start;
       background-color: #f1f0f0;
       color: #000;
     }
-
     @keyframes popIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
     .input-area {
       display: flex;
       padding: 10px;
@@ -182,7 +199,6 @@
       background: rgba(255, 255, 255, 0.9);
       z-index: 10;
     }
-
     .input-area input {
       flex: 1;
       padding: 10px;
@@ -192,7 +208,6 @@
       margin-right: 10px;
       transition: all 0.2s ease;
     }
-
     .input-area button {
       padding: 10px 16px;
       border: none;
@@ -202,11 +217,9 @@
       cursor: pointer;
       transition: background 0.2s ease;
     }
-
     .input-area button:hover {
       background-color: #0056b3;
     }
-
     .typing-indicator {
       display: flex;
       align-items: center;
@@ -214,7 +227,6 @@
       margin-left: 10px;
       margin-bottom: 10px;
     }
-
     .dot {
       width: 8px;
       height: 8px;
@@ -228,8 +240,6 @@
     .dot:nth-child(3) {
       animation-delay: 0.4s;
     }
-
-    /* Popup Ad Styles */
     #popup-ad {
       display: none;
       position: fixed;
@@ -258,10 +268,11 @@
       right: 16px;
       background: none;
       border: none;
-      font-size: 22px;
+      font-size: 28px;
       font-weight: bold;
       color: #888;
       cursor: pointer;
+      z-index: 2;
     }
     #popup-ad h2 {
       margin-bottom: 12px;
@@ -304,43 +315,67 @@
       <img src="https://img.icons8.com/ios-filled/24/ffffff/microphone.png" alt="Mic" />
     </button>
   </div>
-  
   <!-- Popup Ad Modal -->
   <div id="popup-ad">
     <div class="popup-content">
-      <button class="close-btn" onclick="document.getElementById('popup-ad').style.display='none'">&times;</button>
-      <h2>Special Offer!</h2>
-      <p>Check out our amazing products and discounts today!</p>
-      <a href="https://your-ad-link.com" target="_blank">Shop Now</a>
+      <button class="close-btn" onclick="closeAd()" aria-label="Close">&times;</button>
+      <div id="ad-script-slot">
+        <script type="text/javascript">
+          atOptions = {
+            'key' : 'a71e50508a5fb5872bd0fba03145d8d8',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/a71e50508a5fb5872bd0fba03145d8d8/invoke.js"></script>
+      </div>
     </div>
   </div>
-
+  <!-- Banner Ad (fixed at bottom, small size, with close button) -->
+  <div id="banner-ad">
+    <button class="close-banner-btn" onclick="closeBannerAd()" aria-label="Close banner">&times;</button>
+    <div id="banner-slot" style="width:320px;height:50px;display:flex;align-items:center;justify-content:center;">
+      <script type="text/javascript">
+        atOptions = {
+          'key' : 'a71e50508a5fb5872bd0fba03145d8d8',
+          'format' : 'iframe',
+          'height' : 50,
+          'width' : 320,
+          'params' : {}
+        };
+      </script>
+      <script type="text/javascript" src="//www.highperformanceformat.com/a71e50508a5fb5872bd0fba03145d8d8/invoke.js"></script>
+    </div>
+  </div>
   <script>
-    window.addEventListener("load", () => {
-      const voiceInput = localStorage.getItem("voiceMessage");
-      if (voiceInput) {
-        localStorage.removeItem("voiceMessage");
-        addMessage(voiceInput, 'user');
-        processInput(voiceInput);
-      }
-    });
-    function openVoicePage() {
-      window.location.href = "voice.html"; // or open a modal
+    // Ad popup logic
+    let adIntervalId;
+    function showAdPopup() {
+      document.getElementById('popup-ad').style.display = 'flex';
     }
-    const chat = document.getElementById('chat');
-    const userInput = document.getElementById('userInput');
-
+    function closeAd() {
+      document.getElementById('popup-ad').style.display = 'none';
+    }
+    function closeBannerAd() {
+      document.getElementById('banner-ad').style.display = 'none';
+      // Optionally, to reclaim chat space:
+      document.querySelector('.chat-container').style.marginBottom = '0';
+    }
     window.addEventListener('load', () => {
       setTimeout(() => {
         document.getElementById('splash').style.display = 'none';
       }, 3000);
-
-      // Show popup ad after 10 seconds
-      setTimeout(() => {
-        document.getElementById('popup-ad').style.display = 'flex';
-      }, 10000);
+      // First ad after 10 seconds
+      setTimeout(showAdPopup, 10000);
+      // Then repeat every 5 minutes (300000 ms)
+      adIntervalId = setInterval(showAdPopup, 30000);
     });
 
+    // Assistant logic
+    const chat = document.getElementById('chat');
+    const userInput = document.getElementById('userInput');
     const customQandA = {
       "hello": "Hi there! How can I help you today?",
       "who are you": "I am Yaro, your personal assistant!",
@@ -350,12 +385,9 @@
     let userMemory = {
       name: null,
     };
-
     function getClosestAnswer(userText) {
       const keywords = Object.keys(customQandA);
       const text = userText.toLowerCase();
-
-      // Simple best-match scoring by keyword presence
       for (let key of keywords) {
         const words = key.toLowerCase().split(" ");
         for (let word of words) {
@@ -366,7 +398,6 @@
       }
       return null;
     }
-
     function addMessage(text, sender = 'user') {
       const msg = document.createElement('div');
       msg.className = `message ${sender}`;
@@ -374,7 +405,6 @@
       chat.appendChild(msg);
       chat.scrollTop = chat.scrollHeight;
     }
-
     function showTyping(callback) {
       const indicator = document.createElement('div');
       indicator.className = 'typing-indicator';
@@ -386,15 +416,12 @@
         callback();
       }, 1000);
     }
-
     function sendMessage() {
       const text = userInput.value.trim();
       if (!text) return;
       addMessage(text, 'user');
       userInput.value = '';
-      document.getElementById("center-prompt").style.display = "none";    
-
-      // Remember name
+      document.getElementById("center-prompt").style.display = "none";
       if (/my name is (.+)/i.test(text)) {
         const name = text.match(/my name is (.+)/i)[1].trim();
         userMemory.name = name;
@@ -403,10 +430,7 @@
         });
         return;
       }
-
-      // (Add city, age, and "what is my name" logic here too)
       const lowerText = text.toLowerCase();
-
       if (lowerText.includes("time")) {
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         showTyping(() => {
@@ -414,7 +438,6 @@
         });
         return;
       }
-
       if (lowerText.includes("date")) {
         const date = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
         showTyping(() => {
@@ -422,8 +445,6 @@
         });
         return;
       }
-
-      // Check for calculator command
       if (text.toLowerCase().startsWith("calculate")) {
         const expression = text.replace(/calculate/i, "").trim();
         try {
@@ -438,8 +459,6 @@
         }
         return;
       }
-
-      // Default Q&A handling
       showTyping(() => {
         const direct = customQandA[text.toLowerCase()];
         const similar = getClosestAnswer(text);
@@ -447,11 +466,12 @@
         addMessage(reply, 'bot');
       });
     }
-
     userInput.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') sendMessage();
     });
-    <script type='text/javascript' src='//pl26663951.profitableratecpm.com/46/e0/9a/46e09a0c10f100591625983798990241.js'></script>
+    function openVoicePage() {
+      window.location.href = "voice.html";
+    }
   </script>
 </body>
 </html>
