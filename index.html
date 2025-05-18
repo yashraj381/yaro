@@ -2,625 +2,319 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="monetag" content="c198cb9fae1522495d234bf1b0fdb70e">
-  <meta name="google-site-verification" content="0Ke5KXWiZFg5HmmvSCQ44Rkdnvj-ZM9DacRWVQ4qbtM" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Yaro Assistant - NCERT Solutions & Study Help</title>
-  <meta name="description" content="Yaro Assistant provides comprehensive NCERT solutions and educational resources. Get step-by-step answers and study help online!">
-  <meta name="keywords" content="Yaro Assistant, NCERT Solution, NCERT Answers, Study Assistant, Education, Online Learning, CBSE, NCERT Helper">
-  <meta property="og:title" content="Yaro Assistant - NCERT Solutions & Study Help">
-  <meta property="og:description" content="Your best assistant for NCERT solutions, answers, and educational help.">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ... your existing styles unchanged ... */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
+    :root {
+      --primary: #1d3557;
+      --secondary: #ff9933;
+      --accent: #138808;
+      --bg: #f7faff;
+      --card-bg: #fff;
+      --border: #e3e8f0;
+      --shadow: 0 8px 32px 0 rgba(60, 72, 110, 0.08);
+      --radius: 18px;
+      --font-main: 'Outfit', Arial, sans-serif;
+    }
+    html, body {
+      margin:0;padding:0;box-sizing:border-box;
+      background: var(--bg);
+      font-family: var(--font-main); color: var(--primary);
+      width: 100vw; min-height: 100vh; overflow-x: hidden;
+      font-size: 16px;
     }
     body {
-      background: linear-gradient(-45deg, #ffffff, #e6e6ff, #ffe6e6, #e6fff2);
-      background-size: 400% 400%;
-      animation: gradientMove 15s ease infinite;
-      color: #000000;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
+      width: 100vw; min-height: 100vh;
+      display: flex; flex-direction: column;
     }
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    /* AppBar */
+    .appbar {
+      width: 100vw; height: 56px;
+      background: var(--card-bg);
+      box-shadow: 0 2px 12px rgba(44,60,110,0.09);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1.5px solid var(--border);
+      position: fixed; top: 0; left: 0; z-index: 100;
     }
+    .appbar .logo-row {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .appbar .logo-row img {
+      width: 32px; height: 32px; border-radius: 10px; border: 2px solid var(--secondary);
+      background: #fff;
+    }
+    .appbar .brand-title {
+      font-size: 1.18rem; font-weight: 700;
+      background: linear-gradient(90deg, var(--secondary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .appbar .company {
+      font-size: .92rem; font-weight: 600; background: #e8ffd9; color: #138808;
+      border-radius: 8px; padding: 3px 9px; margin-left: 6px;
+      letter-spacing: 0.2px; display: inline-block;
+    }
+    .appbar .menu-btn {
+      background: var(--secondary); color: #fff; font-weight: 600;
+      border: none; border-radius: 8px; padding: 9px 14px; font-size: .98rem;
+      cursor: pointer; box-shadow: 0 2px 8px rgba(255,153,51,0.09);
+      transition: background 0.16s;
+    }
+    .appbar .menu-btn:active { background: #ff7c00; }
+    /* Drawer/Side menu */
+    .drawer-backdrop {
+      display: none; position: fixed; left:0; top:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.14); z-index: 9000;
+    }
+    .drawer-backdrop.active { display: block; }
+    .side-drawer {
+      position: fixed; top: 56px; right: -320px;
+      width: 90vw; max-width: 320px; 
+      height: calc(100vh - 112px); /* 56 appbar + 56 input+ad */
+      background: #fff; box-shadow: -2px 0 18px rgba(0,0,0,0.13);
+      z-index: 10000; /* BELOW input/ad (which are 10001+) */
+      display: flex; flex-direction: column; align-items: flex-start;
+      padding: 38px 14px 24px 14px; transition: right 0.36s cubic-bezier(.68,-0.55,.27,1.55);
+      box-sizing: border-box; overflow-y: auto; border-radius: 0 0 0 18px;
+    }
+    .side-drawer.active { right: 0; }
+    .side-drawer .drawer-close {
+      align-self: flex-end; font-size: 30px; background: none; border: none; color: #888; cursor: pointer; margin-bottom: 20px;
+    }
+    .side-drawer .drawer-title { font-size: 1.13rem; font-weight: 700; color: var(--primary); margin-bottom: 8px;}
+    .side-drawer .drawer-link {
+      margin-top: 13px; background: var(--secondary); color: #fff; padding: 11px 14px; font-size: 1rem;
+      border: none; border-radius: 12px; cursor: pointer; font-weight: 600; width: 100%; text-align: left;
+      box-shadow: 0 2px 10px rgba(255, 153, 51, 0.07); transition: background 0.19s;
+    }
+    .side-drawer .drawer-link:active { background: #ff7c00; }
+    /* Splash/Loading screen */
     .splash-screen {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      animation: fadeOut 2s ease 3s forwards;
-    }
-    .splash-screen img {
-      width: 80px;
-      margin-bottom: 20px;
-    }
-    .splash-screen h1 {
-      font-size: 32px;
-      color: #000;
-      animation: popIn 1s ease;
-    }
-    .loader-bar {
-      display: flex;
-      gap: 8px;
-      margin-top: 20px;
-    }
-    .loader-bar div {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      animation: bounce 1.2s infinite ease-in-out both;
-    }
-    .loader-bar div:nth-child(1) {
-      background: #ff9933;
-      animation-delay: 0s;
-    }
-    .loader-bar div:nth-child(2) {
-      background: #ffffff;
-      border: 1px solid #000;
-      animation-delay: 0.2s;
-    }
-    .loader-bar div:nth-child(3) {
-      background: #138808;
-      animation-delay: 0.4s;
-    }
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-        visibility: hidden;
-      }
-    }
-    @keyframes bounce {
-      0%, 80%, 100% { transform: scale(0); }
-      40% { transform: scale(1); }
-    }
-    @keyframes pulseGlow {
-      0% {
-        box-shadow: 0 0 10px rgba(255, 153, 51, 0.4);
-        transform: translate(-50%, -50%) scale(1);
-      }
-      50% {
-        box-shadow: 0 0 25px rgba(255, 255, 255, 0.7);
-        transform: translate(-50%, -50%) scale(1.05);
-      }
-      100% {
-        box-shadow: 0 0 10px rgba(19, 136, 8, 0.5);
-        transform: translate(-50%, -50%) scale(1);
-      }
-    }
-    header.original-header {
-      display: none;
-    }
-    header {
-      text-align: center;
-      padding: 10px;
-      background-color: rgba(255, 255, 255, 0.8);
-      font-size: 14px;
-      font-weight: bold;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      position: relative;
-      z-index: 10;
-    }
-    .top-card {
-      position: relative;
-      margin: 0 auto;
-      margin-top: 24px;
-      width: 380px;
-      max-width: 95vw;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-      padding: 18px 0 0 0;
-      z-index: 20;
-      min-height: 60px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 9999; animation: fadeOut 1.7s ease 2.5s forwards;
     }
-    .top-card header {
-      padding: 0;
-      background-color: transparent;
-      box-shadow: none;
-      margin-bottom: 0;
-      width: 100%;
-      font-size: 16px;
-      font-weight: bold;
-      color: #222;
-      position: static;
-    }
-    .top-card .menu-dots {
-      position: absolute;
-      top: 13px;
-      right: 16px;
-      margin: 0;
-    }
-    .menu-dots {
-      position: absolute;
-      top: 12px;
-      right: 18px;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10003;
-      background: none;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .menu-dots:hover {
-      background: #f2f2f2;
-      border-radius: 50%;
-    }
-    .dot {
-      width: 6px;
-      height: 6px;
-      margin: 2.5px 0;
-      background: #333;
-      border-radius: 50%;
-      display: block;
-    }
-    .dots-vertical {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-    .slide-menu-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      z-index: 9999;
-      background: rgba(0,0,0,0.15);
-      transition: background 0.3s;
-    }
-    .slide-menu-overlay.active {
-      display: block;
-    }
-    .slide-menu {
-      position: fixed;
-      top: 0; right: -320px;
-      width: 260px;
-      height: 100vh;
-      background: #fff;
-      box-shadow: -2px 0 18px rgba(0,0,0,0.13);
-      z-index: 10000;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 28px 24px 24px 28px;
-      transition: right 0.4s cubic-bezier(.68,-0.55,.27,1.55);
-    }
-    .slide-menu.active {
-      right: 0;
-      transition: right 0.4s cubic-bezier(.68,-0.55,.27,1.55);
-    }
-    .slide-menu .close-slide {
-      align-self: flex-end;
-      font-size: 28px;
-      background: none;
-      border: none;
-      color: #888;
-      cursor: pointer;
-      margin-bottom: 28px;
-    }
-    .slide-menu .menu-title {
-      font-size: 20px;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 14px;
-    }
-    .slide-menu .ncert-btn {
-      margin-top: 16px;
-      background: #ff9933;
-      color: #fff;
-      padding: 13px 18px;
-      font-size: 16px;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.2s;
-      width: 100%;
-      text-align: left;
-      box-shadow: 0 2px 10px rgba(255, 153, 51, 0.08);
-    }
-    .slide-menu .ncert-btn:hover {
-      background: #ff7c00;
-    }
-    #center-prompt {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 28px;
-      font-weight: bold;
-      color: #111;
-      padding: 20px 30px;
-      border-radius: 16px;
-      border: 2px solid transparent;
-      background: #fff;
-      box-shadow: 0 0 10px rgba(255, 153, 51, 0.4);
-      animation: pulseGlow 3s infinite ease-in-out;
-      user-select: none;
-      pointer-events: none;
+    .splash-screen img { width: 64px; margin-bottom: 10px; filter: drop-shadow(0 4px 14px #e0e7ff);}
+    .splash-screen h1 { font-size: 1.6rem; font-weight: 700; color: #333; margin-bottom: 3px;}
+    .splash-powered { color: #ff9933; font-size: 1rem; margin-bottom: 10px; font-weight: 600;}
+    .splash-company { font-size: 0.97rem; color: #1d3557; margin-bottom: 8px; font-weight: 500;}
+    .loader-bar { display: flex; gap: 8px; margin-top: 7px;}
+    .loader-bar div { width: 11px; height: 11px; border-radius: 50%; animation: bounce 1.2s infinite both;}
+    .loader-bar div:nth-child(1) { background: #ff9933; animation-delay: 0s;}
+    .loader-bar div:nth-child(2) { background: #fff; border: 1.5px solid #000; animation-delay: 0.2s;}
+    .loader-bar div:nth-child(3) { background: #138808; animation-delay: 0.4s;}
+    @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+    /* Chat Mobile Layout */
+    .chat-section {
+      width: 100vw; max-width: 100vw; margin: 0 auto;
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      border-radius: 0; margin-top: 56px;
+      display: flex; flex-direction: column; min-height: calc(100vh - 56px - 112px);
+      border: none; position: relative; overflow: hidden; box-sizing: border-box;
     }
     .chat-container {
-      flex: 1;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      z-index: 1;
-      margin-bottom: 60px;
+      flex: 1; padding: 18px 3vw 7px 3vw;
+      display: flex; flex-direction: column; overflow-y: auto;
+      border-radius: 0; box-sizing: border-box; width: 100vw; max-width: 100vw;
     }
     .message {
-      max-width: 80%;
-      padding: 12px 16px;
-      margin-bottom: 12px;
-      border-radius: 18px;
-      position: relative;
-      animation: popIn 0.3s ease;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      width: fit-content; max-width: 82vw; padding: 11px 14px; margin-bottom: 11px; border-radius: 15px;
+      font-size: 0.99rem; line-height: 1.58; word-break: break-word;
+      box-shadow: 0 2px 8px rgba(44, 60, 110, 0.04); border: 1px solid #f3f3f3; box-sizing: border-box; overflow-wrap: break-word;
     }
     .message.user {
-      align-self: flex-end;
-      background-color: #dcf8c6;
-      color: #000;
+      align-self: flex-end; background: linear-gradient(90deg, #e9f5dc 80%, #cbfce9 100%); color: #205015;
+      border-bottom-right-radius: 6px; border-top-right-radius: 20px; border-top-left-radius: 20px; border-bottom-left-radius: 18px; border: 1px solid #b2f5ea0b;
     }
     .message.bot {
-      align-self: flex-start;
-      background-color: #f1f0f0;
-      color: #000;
+      align-self: flex-start; background: #f4f7fb; color: #33405b;
+      border-bottom-left-radius: 6px; border-top-right-radius: 20px; border-top-left-radius: 20px; border-bottom-right-radius: 18px; border: 1px solid #e0e7ff;
     }
-    @keyframes popIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .typing-indicator { display: flex; align-items: center; gap: 5px; margin-left: 10px; margin-bottom: 10px;}
+    .typing-indicator .dot { width: 9px; height: 9px; border-radius: 50%; background-color: #bbb; animation: bounce 1.2s infinite both;}
+    .typing-indicator .dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator .dot:nth-child(3) { animation-delay: 0.4s; }
+    .chat-section .center-prompt {
+      position: absolute; left: 50%; top: 48%; transform: translate(-50%, -50%);
+      font-size: 1.01rem; font-weight: 600; color: #818181;
+      padding: 10px 18px; border-radius: 12px; border: 2px solid #e3e8f0; background: #f8fafc;
+      box-shadow: 0 0 12px rgba(255, 153, 51, 0.08); animation: pulseGlow 3s infinite;
+      user-select: none; pointer-events: none; z-index: 2;
     }
+    @keyframes pulseGlow {
+      0% {box-shadow: 0 0 10px rgba(255, 153, 51, 0.11);}
+      50% {box-shadow: 0 0 18px rgba(255, 255, 255, 0.13);}
+      100% {box-shadow: 0 0 10px rgba(19, 136, 8, 0.04);}
+    }
+    /* Input Area - fixed just above banner ad */
     .input-area {
-      display: flex;
-      padding: 10px;
-      border-top: 1px solid #ddd;
-      background: rgba(255, 255, 255, 0.9);
-      z-index: 10;
+      display: flex; gap: 7px; padding: 8px 2vw 8px 2vw; border-top: 1.5px solid var(--border);
+      background: var(--input-bg); z-index: 10001; border-radius: 0;
+      position: fixed; left: 0; right: 0; bottom: 56px;
+      width: 100vw; max-width: 100vw; box-sizing: border-box; align-items: center;
     }
     .input-area input {
-      flex: 1;
-      padding: 10px;
-      border-radius: 20px;
-      border: 1px solid #ccc;
-      outline: none;
-      margin-right: 10px;
-      transition: all 0.2s ease;
+      flex: 1; padding: 11px 11px; border-radius: 12px; border: 1.5px solid #d2d8e0;
+      outline: none; background: #fff; font-size: 0.98rem; margin-right: 3px;
+      transition: border-color 0.18s; min-width: 0; color: #1d3557; max-width: 100vw; box-sizing: border-box;
     }
+    .input-area input:focus { border-color: var(--secondary); }
     .input-area button {
-      padding: 10px 16px;
-      border: none;
-      background-color: #007bff;
-      color: white;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: background 0.2s ease;
+      padding: 9px 12px; border: none; background: var(--primary); color: white; border-radius: 10px;
+      cursor: pointer; font-size: 0.98rem; font-weight: 600; transition: background 0.18s;
+      display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 10px rgba(44, 60, 110, 0.09);
+      max-width: 32vw; min-width: 34px; overflow: hidden;
     }
-    .input-area button:hover {
-      background-color: #0056b3;
-    }
-    .typing-indicator {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      margin-left: 10px;
-      margin-bottom: 10px;
-    }
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: #888;
-      animation: bounce 1.2s infinite ease-in-out both;
-    }
-    .dot:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-    .dot:nth-child(3) {
-      animation-delay: 0.4s;
-    }
+    .input-area button:active { background: var(--secondary); color: #fff;}
+    #mic-launch img { width: 21px; height: 21px; filter: invert(1) brightness(1.4);}
+    /* Banner Ad */
     #banner-ad {
-      width: 100vw;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 50px;
-      max-height: 60px;
-      background: transparent;
-      z-index: 10001;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      transition: bottom 0.3s;
+      width: 100vw; min-width: 0; max-width: 100vw;
+      display: flex; justify-content: center; align-items: center;
+      min-height: 48px; max-height: 56px; background: transparent;
+      z-index: 10001; position: fixed; bottom: 0; left: 0;
+      transition: bottom 0.3s; overflow-x: hidden; padding: 0;
     }
     #banner-ad .close-banner-btn {
-      position: absolute;
-      right: 10px;
-      top: 9px;
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      font-size: 16px;
-      font-weight: bold;
-      color: #666;
-      cursor: pointer;
-      z-index: 10002;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 24px;
-      padding: 0;
+      position: absolute; right: 10px; top: 7px; background: #fff;
+      border: 1px solid #ccc; border-radius: 50%; width: 22px; height: 22px;
+      font-size: 16px; font-weight: bold; color: #666; cursor: pointer; z-index: 10002;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07); display: flex; align-items: center;
+      justify-content: center; line-height: 22px; padding: 0;
     }
-    /* Popunder Modal */
-    #popunder-modal {
-      display: none;
-      position: fixed;
-      z-index: 12000;
-      inset: 0;
-      background: rgba(0,0,0,0.23);
-      align-items: center;
-      justify-content: center;
+    #banner-slot {
+      width: min(320px, 90vw); height: 50px; display: flex; align-items: center; justify-content: center;
+      overflow: hidden; min-width: 0; padding: 0; margin: 0;
     }
-    #popunder-modal.active {
-      display: flex;
-    }
-    .popunder-content {
-      background: #fff;
-      padding: 34px 32px 32px 32px;
-      border-radius: 18px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.13);
-      position: relative;
-      max-width: 95vw;
-      min-width: 320px;
-      min-height: 120px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .popunder-close-btn {
-      position: absolute;
-      top: 12px;
-      right: 16px;
-      background: none;
-      border: none;
-      font-size: 28px;
-      font-weight: bold;
-      color: #888;
-      cursor: pointer;
-      z-index: 2;
-      line-height: 1;
-    }
-    .popunder-content h2 {
-      color: #ff9933;
-      margin-top: 0;
-      margin-bottom: 12px;
-      font-size: 22px;
-    }
-    .popunder-content p {
-      margin-bottom: 14px;
-      color: #333;
-      font-size: 16px;
-    }
-    .popunder-content .popunder-confirm-btn {
-      margin-top: 12px;
-      background: #138808;
-      color: #fff;
-      padding: 12px 28px;
-      border-radius: 8px;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.2s;
-    }
-    .popunder-content .popunder-confirm-btn:hover {
-      background: #0e6606;
-    }
-    @media (max-width: 500px) {
-      .top-card {
-        width: 98vw;
-        min-width: 0;
-        max-width: 100vw;
-      }
-      .popunder-content {
-        min-width: 80vw;
-        padding: 22px 6vw 20px 6vw;
-      }
+    @media (max-width: 400px) {
+      .appbar, .input-area, #banner-ad, .chat-section, .chat-container { width: 100vw; }
+      #banner-slot { width: 100vw; }
+      .side-drawer { width: 98vw; max-width: 98vw;}
     }
   </style>
 </head>
 <body>
+  <!-- Splash/Loading Screen -->
   <div class="splash-screen" id="splash">
-    <img src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg" alt="India Flag">
+    <img src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg" alt="India Flag" />
     <h1>Yaro</h1>
+    <div class="splash-powered">Powered by Yashraj Pvt Ltd</div>
+    <div class="splash-company">Your Reliable Study Assistant</div>
     <div class="loader-bar">
       <div></div>
       <div></div>
       <div></div>
     </div>
   </div>
-  <!-- SEO-optimized Heading and Intro Text -->
-  <header style="text-align:center; background:none; box-shadow:none; margin-top:18px;">
-    <h1>Yaro Assistant – Your Reliable NCERT Solution & Study Partner</h1>
-    <p>
-      Welcome to <b>Yaro Assistant</b>! Find <strong>NCERT solutions</strong>, accurate answers, and helpful study tools for all classes. Whether you need help with CBSE curriculum, looking for step-by-step answers, or want a smart study assistant, Yaro is here for you.
-    </p>
-  </header>
-  <!-- White card at top for Powered by ... and menu dots -->
-  <div class="top-card">
-    <header>Powered by Yashraj Pawar</header>
-    <button class="menu-dots" id="menuDots" aria-label="Open menu">
-      <span class="dots-vertical">
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-      </span>
-    </button>
+  <!-- App Bar -->
+  <div class="appbar">
+    <div class="logo-row">
+      <img src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg" alt="Yaro Logo">
+      <span class="brand-title">Yaro</span>
+      <span class="company">Yashraj Pvt Ltd</span>
+    </div>
+    <button class="menu-btn" id="openDrawerBtn" aria-label="Open menu">Menu</button>
   </div>
-  <!-- Slide-in Menu Overlay -->
-  <div class="slide-menu-overlay" id="slideMenuOverlay"></div>
-  <!-- Slide-in Menu -->
-  <nav class="slide-menu" id="slideMenu" aria-label="Side menu">
-    <button class="close-slide" id="closeSlideBtn" aria-label="Close">&times;</button>
-    <div class="menu-title">Menu</div>
-    <button class="ncert-btn" onclick="window.location.href='ncert.html'">
-      📚 NCERT Solutions Click Here
+  <!-- Drawer/Side Menu -->
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <nav class="side-drawer" id="sideDrawer" aria-label="Side menu">
+    <button class="drawer-close" id="closeDrawerBtn" aria-label="Close">&times;</button>
+    <div class="drawer-title">Quick Links</div>
+    <button class="drawer-link" onclick="window.location.href='ncert.html'">
+      📚 NCERT Solutions
     </button>
   </nav>
-  <!-- Hide the original header (fallback: for code compatibility) -->
-  <header class="original-header">Powered by Yashraj Pawar</header>
-  <!-- Popunder Modal -->
-  <div id="popunder-modal">
-    <div class="popunder-content">
-      <button class="popunder-close-btn" id="closePopunderAd" aria-label="Cancel">&times;</button>
-      <h2>Advertisement</h2>
-      <p>This ad supports free content. No adult (18+) ads will be shown.<br />Click continue to open the ad in a new tab.</p>
-      <button class="popunder-confirm-btn" id="proceedPopunderAd">Continue</button>
-    </div>
-  </div>
-  <div id="center-prompt">What can I help you with?</div>
-  <div class="chat-container" id="chat"></div>
+  <!-- Chat Section -->
+  <section class="chat-section">
+    <div class="center-prompt" id="centerPrompt">What can I help you with?</div>
+    <div class="chat-container" id="chat"></div>
+  </section>
+  <!-- Input bar, fixed above ad -->
   <div class="input-area">
-    <input type="text" id="userInput" placeholder="Type your message..." />
-    <button onclick="sendMessage()">Send</button>
-    <button id="mic-launch" onclick="openVoicePage()">
+    <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off" />
+    <button onclick="sendMessage()" id="sendBtn">Send</button>
+    <button id="mic-launch" onclick="openVoicePage()" title="Voice Assistant">
       <img src="https://img.icons8.com/ios-filled/24/ffffff/microphone.png" alt="Mic" />
     </button>
   </div>
-  <!-- Banner Ad (fixed at bottom, small size, with close button) -->
+  <!-- Banner Ad (fixed at bottom) -->
   <div id="banner-ad">
-    <button class="close-banner-btn" onclick="closeBannerAd()" aria-label="Close banner">&times;</button>
-    <div id="banner-slot" style="width:320px;height:50px;display:flex;align-items:center;justify-content:center;">
+    <button class="close-banner-btn" id="closeBannerAd" aria-label="Close banner">&times;</button>
+    <div id="banner-slot">
       <script type="text/javascript">
         atOptions = {
           'key' : 'a71e50508a5fb5872bd0fba03145d8d8',
           'format' : 'iframe',
           'height' : 50,
           'width' : 320,
-          'params' : {
-            'adult': 0 // request no 18+ ads if supported by provider
-          }
+          'params' : { 'adult': 0 }
         };
       </script>
       <script type="text/javascript" src="//www.highperformanceformat.com/a71e50508a5fb5872bd0fba03145d8d8/invoke.js"></script>
     </div>
   </div>
-  <!-- Popunder: Modal logic -->
   <script>
-    // Popunder modal variables
-    let popunderLoaded = false;
-    let popunderDismissed = false;
-
-    // Show popunder modal once per session
-    function showPopunderModal() {
-      if (popunderLoaded || popunderDismissed) return;
-      popunderLoaded = true;
-      document.getElementById('popunder-modal').classList.add('active');
-    }
-    // Accept: open popunder ad in new tab
-    document.getElementById('proceedPopunderAd').onclick = function() {
-      // Open only safe/popunder ad (make sure your ad network is set to not show 18+ ads)
-      window.open(
-        'https://pl26663951.profitableratecpm.com/46/e0/9a/46e09a0c10f100591625983798990241?adult=0',
-        '_blank'
-      );
-      document.getElementById('popunder-modal').classList.remove('active');
-      popunderDismissed = true;
-    };
-    // Dismiss: just close modal, no ad
-    document.getElementById('closePopunderAd').onclick = function() {
-      document.getElementById('popunder-modal').classList.remove('active');
-      popunderDismissed = true;
-    };
-    // Trigger popunder on first click or keydown
-    function firstInteractionPopunder() {
-      setTimeout(showPopunderModal, 500); // delay for better UX
-      window.removeEventListener('click', firstInteractionPopunder);
-      window.removeEventListener('keydown', firstInteractionPopunder);
-    }
-    window.addEventListener('click', firstInteractionPopunder, { once: true });
-    window.addEventListener('keydown', firstInteractionPopunder, { once: true });
-  </script>
-  <script>
-    // Slide Menu Logic
-    const menuDots = document.getElementById('menuDots');
-    const slideMenu = document.getElementById('slideMenu');
-    const slideMenuOverlay = document.getElementById('slideMenuOverlay');
-    const closeSlideBtn = document.getElementById('closeSlideBtn');
-    function openSlideMenu() {
-      slideMenu.classList.add('active');
-      slideMenuOverlay.classList.add('active');
-    }
-    function closeSlideMenu() {
-      slideMenu.classList.remove('active');
-      slideMenuOverlay.classList.remove('active');
-    }
-    menuDots.addEventListener('click', openSlideMenu);
-    closeSlideBtn.addEventListener('click', closeSlideMenu);
-    slideMenuOverlay.addEventListener('click', closeSlideMenu);
-
-    // Banner logic
-    function closeBannerAd() {
-      document.getElementById('banner-ad').style.display = 'none';
-      document.querySelector('.chat-container').style.marginBottom = '0';
-    }
+    // Splash screen logic
     window.addEventListener('load', () => {
       setTimeout(() => {
         document.getElementById('splash').style.display = 'none';
-      }, 3000);
+      }, 1800);
     });
-
-    // Assistant logic
+    // Drawer/Side menu logic
+    const openDrawerBtn = document.getElementById('openDrawerBtn');
+    const sideDrawer = document.getElementById('sideDrawer');
+    const drawerBackdrop = document.getElementById('drawerBackdrop');
+    const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+    openDrawerBtn.addEventListener('click', () => {
+      sideDrawer.classList.add('active');
+      drawerBackdrop.classList.add('active');
+    });
+    closeDrawerBtn.addEventListener('click', () => {
+      sideDrawer.classList.remove('active');
+      drawerBackdrop.classList.remove('active');
+    });
+    drawerBackdrop.addEventListener('click', () => {
+      sideDrawer.classList.remove('active');
+      drawerBackdrop.classList.remove('active');
+    });
+    // Banner logic (button always works and mobile friendly)
+    function closeBannerAd() {
+      const banner = document.getElementById('banner-ad');
+      banner.style.opacity = '0';
+      setTimeout(function() {
+        banner.style.display = 'none';
+      }, 250);
+    }
+    document.getElementById('closeBannerAd').onclick = closeBannerAd;
+    // Open Voice Assistant page (placeholder)
+    function openVoicePage() {
+      window.location.href = 'voice.html';
+    }
+    // Chat/Assistant logic
     const chat = document.getElementById('chat');
     const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const centerPrompt = document.getElementById("centerPrompt");
     const customQandA = {
       "hello": "Hi there! How can I help you today?",
       "who are you": "I am Yaro, your personal assistant!",
       "how are you": "I'm always doing great! Thanks for asking.",
-      "bye": "Goodbye! Have a great day!"
+      "bye": "Goodbye! Have a great day!",
+      "ncert": "You can access all NCERT solutions by clicking the menu and selecting 'NCERT Solutions'.",
+      "cbse": "I can help you with CBSE related questions. Please specify your subject or question!"
     };
-    let userMemory = {
-      name: null,
-    };
-    function getClosestAnswer(userText) {
-      const keywords = Object.keys(customQandA);
-      const text = userText.toLowerCase();
-      for (let key of keywords) {
-        const words = key.toLowerCase().split(" ");
-        for (let word of words) {
-          if (text.includes(word)) {
-            return customQandA[key];
-          }
-        }
-      }
-      return null;
-    }
+    let userMemory = { name: null };
+    userInput.addEventListener('keydown', function(e){
+      if(e.key === 'Enter') sendMessage();
+    });
     function addMessage(text, sender = 'user') {
       const msg = document.createElement('div');
       msg.className = `message ${sender}`;
@@ -637,36 +331,441 @@
       setTimeout(() => {
         chat.removeChild(indicator);
         callback();
-      }, 1000);
+      }, 850);
+    }
+    function getClosestAnswer(userText) {
+      const text = userText.trim().toLowerCase();
+      for (let key in customQandA) {
+        if (text.includes(key)) return customQandA[key];
+      }
+      return null;
+    }
+    function assistantResponse(text) {
+      if (/my name is (.+)/i.test(text)) {
+        const name = text.match(/my name is (.+)/i)[1].trim();
+        userMemory.name = name;
+        return `Nice to meet you, ${name}!`;
+      }
+      if (/\btime\b/.test(text.toLowerCase())) {
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        return `Time: ${time}`;
+      }
+      if (/\bdate\b/.test(text.toLowerCase())) {
+        const date = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+        return `Date: ${date}`;
+      }
+      if (/^calculate\s+(.+)/i.test(text)) {
+        let expr = text.match(/^calculate\s+(.+)/i)[1];
+        try {
+          if(/[^-()\d/*+. ]/.test(expr)) return "Sorry, I can only calculate basic math expressions.";
+          let result = Function('"use strict";return (' + expr + ')')();
+          if (isNaN(result)) return "Sorry, I couldn't compute that.";
+          return `Result: ${result}`;
+        } catch {
+          return "Sorry, that calculation is invalid.";
+        }
+      }
+      let answer = getClosestAnswer(text);
+      if (answer) return answer;
+      if (userMemory.name && /\bmy name\b/.test(text.toLowerCase())) {
+        return `I remember, your name is ${userMemory.name}!`;
+      }
+      return "Sorry, I don't understand that yet. For NCERT solutions, type your question or use the menu!";
     }
     function sendMessage() {
       const text = userInput.value.trim();
       if (!text) return;
       addMessage(text, 'user');
       userInput.value = '';
-      document.getElementById("center-prompt").style.display = "none";
+      centerPrompt.style.display = "none";
+      showTyping(() => {
+        const reply = assistantResponse(text);
+        addMessage(reply, 'bot');
+      });
+    }
+  </script>
+</body>
+</html> content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Yaro Assistant - NCERT Solutions & Study Help</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1d3557;
+      --secondary: #ff9933;
+      --accent: #138808;
+      --bg: #f7faff;
+      --card-bg: #fff;
+      --border: #e3e8f0;
+      --shadow: 0 8px 32px 0 rgba(60, 72, 110, 0.08);
+      --radius: 18px;
+      --font-main: 'Outfit', Arial, sans-serif;
+    }
+    html, body {
+      margin:0;padding:0;box-sizing:border-box;
+      background: var(--bg);
+      font-family: var(--font-main); color: var(--primary);
+      width: 100vw; min-height: 100vh; overflow-x: hidden;
+      font-size: 16px;
+    }
+    body {
+      width: 100vw; min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+    /* AppBar */
+    .appbar {
+      width: 100vw; height: 56px;
+      background: var(--card-bg);
+      box-shadow: 0 2px 12px rgba(44,60,110,0.09);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1.5px solid var(--border);
+      position: fixed; top: 0; left: 0; z-index: 100;
+    }
+    .appbar .logo-row {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .appbar .logo-row img {
+      width: 32px; height: 32px; border-radius: 10px; border: 2px solid var(--secondary);
+      background: #fff;
+    }
+    .appbar .brand-title {
+      font-size: 1.18rem; font-weight: 700;
+      background: linear-gradient(90deg, var(--secondary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .appbar .company {
+      font-size: .92rem; font-weight: 600; background: #e8ffd9; color: #138808;
+      border-radius: 8px; padding: 3px 9px; margin-left: 6px;
+      letter-spacing: 0.2px; display: inline-block;
+    }
+    .appbar .menu-btn {
+      background: var(--secondary); color: #fff; font-weight: 600;
+      border: none; border-radius: 8px; padding: 9px 14px; font-size: .98rem;
+      cursor: pointer; box-shadow: 0 2px 8px rgba(255,153,51,0.09);
+      transition: background 0.16s;
+    }
+    .appbar .menu-btn:active { background: #ff7c00; }
+    /* Drawer/Side menu */
+    .drawer-backdrop {
+      display: none; position: fixed; left:0; top:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.14); z-index: 9000;
+    }
+    .drawer-backdrop.active { display: block; }
+    .side-drawer {
+      position: fixed; top: 56px; right: -320px;
+      width: 90vw; max-width: 320px; 
+      height: calc(100vh - 112px); /* 56 appbar + 56 input+ad */
+      background: #fff; box-shadow: -2px 0 18px rgba(0,0,0,0.13);
+      z-index: 10000; /* BELOW input/ad (which are 10001+) */
+      display: flex; flex-direction: column; align-items: flex-start;
+      padding: 38px 14px 24px 14px; transition: right 0.36s cubic-bezier(.68,-0.55,.27,1.55);
+      box-sizing: border-box; overflow-y: auto; border-radius: 0 0 0 18px;
+    }
+    .side-drawer.active { right: 0; }
+    .side-drawer .drawer-close {
+      align-self: flex-end; font-size: 30px; background: none; border: none; color: #888; cursor: pointer; margin-bottom: 20px;
+    }
+    .side-drawer .drawer-title { font-size: 1.13rem; font-weight: 700; color: var(--primary); margin-bottom: 8px;}
+    .side-drawer .drawer-link {
+      margin-top: 13px; background: var(--secondary); color: #fff; padding: 11px 14px; font-size: 1rem;
+      border: none; border-radius: 12px; cursor: pointer; font-weight: 600; width: 100%; text-align: left;
+      box-shadow: 0 2px 10px rgba(255, 153, 51, 0.07); transition: background 0.19s;
+    }
+    .side-drawer .drawer-link:active { background: #ff7c00; }
+    /* Splash/Loading screen */
+    .splash-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: #fff;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 9999; animation: fadeOut 1.7s ease 2.5s forwards;
+    }
+    .splash-screen img { width: 64px; margin-bottom: 10px; filter: drop-shadow(0 4px 14px #e0e7ff);}
+    .splash-screen h1 { font-size: 1.6rem; font-weight: 700; color: #333; margin-bottom: 3px;}
+    .splash-powered { color: #ff9933; font-size: 1rem; margin-bottom: 10px; font-weight: 600;}
+    .splash-company { font-size: 0.97rem; color: #1d3557; margin-bottom: 8px; font-weight: 500;}
+    .loader-bar { display: flex; gap: 8px; margin-top: 7px;}
+    .loader-bar div { width: 11px; height: 11px; border-radius: 50%; animation: bounce 1.2s infinite both;}
+    .loader-bar div:nth-child(1) { background: #ff9933; animation-delay: 0s;}
+    .loader-bar div:nth-child(2) { background: #fff; border: 1.5px solid #000; animation-delay: 0.2s;}
+    .loader-bar div:nth-child(3) { background: #138808; animation-delay: 0.4s;}
+    @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+    /* Chat Mobile Layout */
+    .chat-section {
+      width: 100vw; max-width: 100vw; margin: 0 auto;
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      border-radius: 0; margin-top: 56px;
+      display: flex; flex-direction: column; min-height: calc(100vh - 56px - 112px);
+      border: none; position: relative; overflow: hidden; box-sizing: border-box;
+    }
+    .chat-container {
+      flex: 1; padding: 18px 3vw 7px 3vw;
+      display: flex; flex-direction: column; overflow-y: auto;
+      border-radius: 0; box-sizing: border-box; width: 100vw; max-width: 100vw;
+    }
+    .message {
+      width: fit-content; max-width: 82vw; padding: 11px 14px; margin-bottom: 11px; border-radius: 15px;
+      font-size: 0.99rem; line-height: 1.58; word-break: break-word;
+      box-shadow: 0 2px 8px rgba(44, 60, 110, 0.04); border: 1px solid #f3f3f3; box-sizing: border-box; overflow-wrap: break-word;
+    }
+    .message.user {
+      align-self: flex-end; background: linear-gradient(90deg, #e9f5dc 80%, #cbfce9 100%); color: #205015;
+      border-bottom-right-radius: 6px; border-top-right-radius: 20px; border-top-left-radius: 20px; border-bottom-left-radius: 18px; border: 1px solid #b2f5ea0b;
+    }
+    .message.bot {
+      align-self: flex-start; background: #f4f7fb; color: #33405b;
+      border-bottom-left-radius: 6px; border-top-right-radius: 20px; border-top-left-radius: 20px; border-bottom-right-radius: 18px; border: 1px solid #e0e7ff;
+    }
+    .typing-indicator { display: flex; align-items: center; gap: 5px; margin-left: 10px; margin-bottom: 10px;}
+    .typing-indicator .dot { width: 9px; height: 9px; border-radius: 50%; background-color: #bbb; animation: bounce 1.2s infinite both;}
+    .typing-indicator .dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator .dot:nth-child(3) { animation-delay: 0.4s; }
+    .chat-section .center-prompt {
+      position: absolute; left: 50%; top: 48%; transform: translate(-50%, -50%);
+      font-size: 1.01rem; font-weight: 600; color: #818181;
+      padding: 10px 18px; border-radius: 12px; border: 2px solid #e3e8f0; background: #f8fafc;
+      box-shadow: 0 0 12px rgba(255, 153, 51, 0.08); animation: pulseGlow 3s infinite;
+      user-select: none; pointer-events: none; z-index: 2;
+    }
+    @keyframes pulseGlow {
+      0% {box-shadow: 0 0 10px rgba(255, 153, 51, 0.11);}
+      50% {box-shadow: 0 0 18px rgba(255, 255, 255, 0.13);}
+      100% {box-shadow: 0 0 10px rgba(19, 136, 8, 0.04);}
+    }
+    /* Input Area - fixed just above banner ad */
+    .input-area {
+      display: flex; gap: 7px; padding: 8px 2vw 8px 2vw; border-top: 1.5px solid var(--border);
+      background: var(--input-bg); z-index: 10001; border-radius: 0;
+      position: fixed; left: 0; right: 0; bottom: 56px;
+      width: 100vw; max-width: 100vw; box-sizing: border-box; align-items: center;
+    }
+    .input-area input {
+      flex: 1; padding: 11px 11px; border-radius: 12px; border: 1.5px solid #d2d8e0;
+      outline: none; background: #fff; font-size: 0.98rem; margin-right: 3px;
+      transition: border-color 0.18s; min-width: 0; color: #1d3557; max-width: 100vw; box-sizing: border-box;
+    }
+    .input-area input:focus { border-color: var(--secondary); }
+    .input-area button {
+      padding: 9px 12px; border: none; background: var(--primary); color: white; border-radius: 10px;
+      cursor: pointer; font-size: 0.98rem; font-weight: 600; transition: background 0.18s;
+      display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 10px rgba(44, 60, 110, 0.09);
+      max-width: 32vw; min-width: 34px; overflow: hidden;
+    }
+    .input-area button:active { background: var(--secondary); color: #fff;}
+    #mic-launch img { width: 21px; height: 21px; filter: invert(1) brightness(1.4);}
+    /* Banner Ad */
+    #banner-ad {
+      width: 100vw; min-width: 0; max-width: 100vw;
+      display: flex; justify-content: center; align-items: center;
+      min-height: 48px; max-height: 56px; background: transparent;
+      z-index: 10001; position: fixed; bottom: 0; left: 0;
+      transition: bottom 0.3s; overflow-x: hidden; padding: 0;
+    }
+    #banner-ad .close-banner-btn {
+      position: absolute; right: 10px; top: 7px; background: #fff;
+      border: 1px solid #ccc; border-radius: 50%; width: 22px; height: 22px;
+      font-size: 16px; font-weight: bold; color: #666; cursor: pointer; z-index: 10002;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07); display: flex; align-items: center;
+      justify-content: center; line-height: 22px; padding: 0;
+    }
+    #banner-slot {
+      width: min(320px, 90vw); height: 50px; display: flex; align-items: center; justify-content: center;
+      overflow: hidden; min-width: 0; padding: 0; margin: 0;
+    }
+    @media (max-width: 400px) {
+      .appbar, .input-area, #banner-ad, .chat-section, .chat-container { width: 100vw; }
+      #banner-slot { width: 100vw; }
+      .side-drawer { width: 98vw; max-width: 98vw;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Splash/Loading Screen -->
+  <div class="splash-screen" id="splash">
+    <img src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg" alt="India Flag" />
+    <h1>Yaro</h1>
+    <div class="splash-powered">Powered by Yashraj Pvt Ltd</div>
+    <div class="splash-company">Your Reliable Study Assistant</div>
+    <div class="loader-bar">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  <!-- App Bar -->
+  <div class="appbar">
+    <div class="logo-row">
+      <img src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg" alt="Yaro Logo">
+      <span class="brand-title">Yaro</span>
+      <span class="company">Yashraj Pvt Ltd</span>
+    </div>
+    <button class="menu-btn" id="openDrawerBtn" aria-label="Open menu">Menu</button>
+  </div>
+  <!-- Drawer/Side Menu -->
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <nav class="side-drawer" id="sideDrawer" aria-label="Side menu">
+    <button class="drawer-close" id="closeDrawerBtn" aria-label="Close">&times;</button>
+    <div class="drawer-title">Quick Links</div>
+    <button class="drawer-link" onclick="window.location.href='ncert.html'">
+      📚 NCERT Solutions
+    </button>
+  </nav>
+  <!-- Chat Section -->
+  <section class="chat-section">
+    <div class="center-prompt" id="centerPrompt">What can I help you with?</div>
+    <div class="chat-container" id="chat"></div>
+  </section>
+  <!-- Input bar, fixed above ad -->
+  <div class="input-area">
+    <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off" />
+    <button onclick="sendMessage()" id="sendBtn">Send</button>
+    <button id="mic-launch" onclick="openVoicePage()" title="Voice Assistant">
+      <img src="https://img.icons8.com/ios-filled/24/ffffff/microphone.png" alt="Mic" />
+    </button>
+  </div>
+  <!-- Banner Ad (fixed at bottom) -->
+  <div id="banner-ad">
+    <button class="close-banner-btn" id="closeBannerAd" aria-label="Close banner">&times;</button>
+    <div id="banner-slot">
+      <script type="text/javascript">
+        atOptions = {
+          'key' : 'a71e50508a5fb5872bd0fba03145d8d8',
+          'format' : 'iframe',
+          'height' : 50,
+          'width' : 320,
+          'params' : { 'adult': 0 }
+        };
+      </script>
+      <script type="text/javascript" src="//www.highperformanceformat.com/a71e50508a5fb5872bd0fba03145d8d8/invoke.js"></script>
+    </div>
+  </div>
+  <script>
+    // Splash screen logic
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('splash').style.display = 'none';
+      }, 1800);
+    });
+    // Drawer/Side menu logic
+    const openDrawerBtn = document.getElementById('openDrawerBtn');
+    const sideDrawer = document.getElementById('sideDrawer');
+    const drawerBackdrop = document.getElementById('drawerBackdrop');
+    const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+    openDrawerBtn.addEventListener('click', () => {
+      sideDrawer.classList.add('active');
+      drawerBackdrop.classList.add('active');
+    });
+    closeDrawerBtn.addEventListener('click', () => {
+      sideDrawer.classList.remove('active');
+      drawerBackdrop.classList.remove('active');
+    });
+    drawerBackdrop.addEventListener('click', () => {
+      sideDrawer.classList.remove('active');
+      drawerBackdrop.classList.remove('active');
+    });
+    // Banner logic (button always works and mobile friendly)
+    function closeBannerAd() {
+      const banner = document.getElementById('banner-ad');
+      banner.style.opacity = '0';
+      setTimeout(function() {
+        banner.style.display = 'none';
+      }, 250);
+    }
+    document.getElementById('closeBannerAd').onclick = closeBannerAd;
+    // Open Voice Assistant page (placeholder)
+    function openVoicePage() {
+      window.location.href = 'voice.html';
+    }
+    // Chat/Assistant logic
+    const chat = document.getElementById('chat');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const centerPrompt = document.getElementById("centerPrompt");
+    const customQandA = {
+      "hello": "Hi there! How can I help you today?",
+      "who are you": "I am Yaro, your personal assistant!",
+      "how are you": "I'm always doing great! Thanks for asking.",
+      "bye": "Goodbye! Have a great day!",
+      "ncert": "You can access all NCERT solutions by clicking the menu and selecting 'NCERT Solutions'.",
+      "cbse": "I can help you with CBSE related questions. Please specify your subject or question!"
+    };
+    let userMemory = { name: null };
+    userInput.addEventListener('keydown', function(e){
+      if(e.key === 'Enter') sendMessage();
+    });
+    function addMessage(text, sender = 'user') {
+      const msg = document.createElement('div');
+      msg.className = `message ${sender}`;
+      msg.innerText = text;
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+    }
+    function showTyping(callback) {
+      const indicator = document.createElement('div');
+      indicator.className = 'typing-indicator';
+      indicator.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+      chat.appendChild(indicator);
+      chat.scrollTop = chat.scrollHeight;
+      setTimeout(() => {
+        chat.removeChild(indicator);
+        callback();
+      }, 850);
+    }
+    function getClosestAnswer(userText) {
+      const text = userText.trim().toLowerCase();
+      for (let key in customQandA) {
+        if (text.includes(key)) return customQandA[key];
+      }
+      return null;
+    }
+    function assistantResponse(text) {
       if (/my name is (.+)/i.test(text)) {
         const name = text.match(/my name is (.+)/i)[1].trim();
         userMemory.name = name;
-        showTyping(() => {
-          addMessage(`Nice to meet you, ${name}!`, 'bot');
-        });
-        return;
+        return `Nice to meet you, ${name}!`;
       }
-      const lowerText = text.toLowerCase();
-      if (lowerText.includes("time")) {
+      if (/\btime\b/.test(text.toLowerCase())) {
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        showTyping(() => {
-          addMessage(`Time: ${time}`, "bot");
-        });
-        return;
+        return `Time: ${time}`;
       }
-      if (lowerText.includes("date")) {
+      if (/\bdate\b/.test(text.toLowerCase())) {
         const date = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
-        showTyping(() => {
-          addMessage(`Date: ${date}`, "bot");
-        });
-        return;
+        return `Date: ${date}`;
       }
-      if (text.toLowerCase().startsWith("calculate")) {
-        const
+      if (/^calculate\s+(.+)/i.test(text)) {
+        let expr = text.match(/^calculate\s+(.+)/i)[1];
+        try {
+          if(/[^-()\d/*+. ]/.test(expr)) return "Sorry, I can only calculate basic math expressions.";
+          let result = Function('"use strict";return (' + expr + ')')();
+          if (isNaN(result)) return "Sorry, I couldn't compute that.";
+          return `Result: ${result}`;
+        } catch {
+          return "Sorry, that calculation is invalid.";
+        }
+      }
+      let answer = getClosestAnswer(text);
+      if (answer) return answer;
+      if (userMemory.name && /\bmy name\b/.test(text.toLowerCase())) {
+        return `I remember, your name is ${userMemory.name}!`;
+      }
+      return "Sorry, I don't understand that yet. For NCERT solutions, type your question or use the menu!";
+    }
+    function sendMessage() {
+      const text = userInput.value.trim();
+      if (!text) return;
+      addMessage(text, 'user');
+      userInput.value = '';
+      centerPrompt.style.display = "none";
+      showTyping(() => {
+        const reply = assistantResponse(text);
+        addMessage(reply, 'bot');
+      });
+    }
+  </script>
+</body>
+</html>
