@@ -1,1 +1,77 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NCERT Solutions - Select Class</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    h1 {
+      margin-top: 40px;
+    }
+    .button-column {
+      display: flex;
+      flex-direction: column;
+      max-height: 60vh;   /* Show up to 60% of viewport height, rest is scrollable */
+      overflow-y: auto;
+      gap: 16px;
+      width: 90%;
+      margin: 40px auto 0 auto;
+      padding: 10px 0;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .button-column::-webkit-scrollbar {
+      display: none; /* Hide scrollbar for Chrome, Safari, Opera */
+    }
+    .button-column {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;     /* Firefox */
+    }
+    .class-btn {
+      background: #1976d2;
+      color: #fff;
+      border: none;
+      padding: 18px 0;
+      font-size: 1.1em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: block;
+      width: 95%;
+      margin: 0 auto;
+    }
+    .class-btn:hover, .class-btn:focus {
+      background: #1565c0;
+    }
+    @media (max-width: 500px) {
+      h1 { font-size: 1.1em; margin-top: 18px;}
+      .button-column { max-height: 68vh; gap: 10px; }
+      .class-btn { font-size: 1em; padding: 14px 0;}
+    }
+  </style>
+</head>
+<body>
+  <h1>Select Your Class</h1>
+  <div class="button-column">
+    <a class="class-btn" href="class6.html" target="_blank">Class 6</a>
+    <a class="class-btn" href="class7.html" target="_blank">Class 7</a>
+    <a class="class-btn" href="class8.html" target="_blank">Class 8</a>
+    <a class="class-btn" href="class9.html" target="_blank">Class 9</a>
+    <a class="class-btn" href="class10.html" target="_blank">Class 10</a>
+    <a class="class-btn" href="class11.html" target="_blank">Class 11</a>
+    <a class="class-btn" href="class12.html" target="_blank">Class 12</a>
+  </div>
+</body>
+  </html>
