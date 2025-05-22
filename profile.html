@@ -277,6 +277,83 @@
       color: var(--kaushal-blue);
       transform: translateY(-1px) scale(1.05);
     }
+    /* Login/Register Modal */
+    .modal-bg {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(37, 99, 235, 0.11);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-bg.active {
+      display: flex;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(37, 99, 235, 0.16);
+      padding: 32px 28px 22px 28px;
+      width: 96vw;
+      max-width: 370px;
+      text-align: center;
+      position: relative;
+      animation: popUp 0.25s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes popUp {
+      0% { transform: scale(0.85);}
+      100% { transform: scale(1);}
+    }
+    .modal h2 {
+      color: var(--kaushal-blue);
+      margin-bottom: 18px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .modal form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .modal input[type="text"],
+    .modal input[type="password"] {
+      padding: 9px 13px;
+      border-radius: 7px;
+      border: 1px solid #cbd5e1;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.18s;
+    }
+    .modal input:focus {
+      border-color: var(--kaushal-blue);
+    }
+    .modal button {
+      padding: 10px;
+      border-radius: 7px;
+      border: none;
+      background: var(--kaushal-orange);
+      color: #fff;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.16s;
+    }
+    .modal button:hover {
+      background: var(--kaushal-blue);
+    }
+    .modal .switch-link {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #475569;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .modal .error-message {
+      color: #e11d48;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
     /* Responsive */
     @media (max-width: 600px) {
       .navbar, .dashboard-container {
@@ -298,6 +375,19 @@
   </style>
 </head>
 <body>
+  <!-- Modal for Login/Register -->
+  <div class="modal-bg" id="authModalBg">
+    <div class="modal" id="authModal">
+      <h2 id="modalTitle">Create Your Profile</h2>
+      <div class="error-message" id="authError"></div>
+      <form id="authForm">
+        <input type="text" id="usernameInput" placeholder="Username" autocomplete="username"/>
+        <input type="password" id="passwordInput" placeholder="Password" autocomplete="new-password"/>
+        <button type="submit" id="authBtn">Register</button>
+      </form>
+      <div class="switch-link" id="switchAuthMode">Already have an account? Login</div>
+    </div>
+  </div>
   <!-- Navbar -->
   <nav class="navbar">
     <div class="brand">
@@ -308,18 +398,17 @@
       <a href="#" class="active">Home</a>
       <a href="#">Dashboard</a>
       <a href="#">Profile</a>
-      <a href="#">Logout</a>
+      <a href="#" id="logoutBtn" style="display:none;">Logout</a>
     </div>
   </nav>
-
-  <main class="dashboard-container">
+  <main class="dashboard-container" id="dashboardMain" style="display:none;">
     <!-- Left Column -->
     <div class="left-col">
       <!-- Welcome block -->
       <div class="card welcome">
-        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Student profile photo">
+        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Student profile photo" id="profilePhoto">
         <div class="welcome-text">
-          <h2>Welcome, Riya!</h2>
+          <h2>Welcome, <span id="dashboardUsername">Riya</span>!</h2>
           <p>Hope you're ready to learn something amazing today. 🚀</p>
         </div>
       </div>
@@ -381,5 +470,149 @@
       </div>
     </div>
   </main>
+  <script>
+    // Helper functions for localStorage
+    function saveUser(username, password) {
+      localStorage.setItem('kaushal_user', JSON.stringify({username, password}));
+    }
+    function getUser() {
+      return JSON.parse(localStorage.getItem('kaushal_user'));
+    }
+    function clearUser() {
+      localStorage.removeItem('kaushal_user');
+    }
+    function setLoggedInUser(username) {
+      localStorage.setItem('kaushal_loggedin', username);
+    }
+    function getLoggedInUser() {
+      return localStorage.getItem('kaushal_loggedin');
+    }
+    function clearLoggedInUser() {
+      localStorage.removeItem('kaushal_loggedin');
+    }
+
+    // UI controls
+    const authModalBg = document.getElementById('authModalBg');
+    const authForm = document.getElementById('authForm');
+    const modalTitle = document.getElementById('modalTitle');
+    const authBtn = document.getElementById('authBtn');
+    const switchAuthMode = document.getElementById('switchAuthMode');
+    const authError = document.getElementById('authError');
+    const usernameInput = document.getElementById('usernameInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const dashboardMain = document.getElementById('dashboardMain');
+    const dashboardUsername = document.getElementById('dashboardUsername');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    let isLoginMode = false;
+
+    function showModal() {
+      authModalBg.classList.add('active');
+      dashboardMain.style.display = 'none';
+    }
+    function hideModal() {
+      authModalBg.classList.remove('active');
+      dashboardMain.style.display = '';
+    }
+    function showDashboard(username) {
+      dashboardUsername.textContent = username;
+      dashboardMain.style.display = '';
+      logoutBtn.style.display = '';
+    }
+    function hideDashboard() {
+      dashboardMain.style.display = 'none';
+      logoutBtn.style.display = 'none';
+    }
+    function resetAuthForm() {
+      authError.textContent = '';
+      usernameInput.value = '';
+      passwordInput.value = '';
+    }
+    function setMode(login) {
+      isLoginMode = login;
+      if (login) {
+        modalTitle.textContent = "Login to Your Profile";
+        authBtn.textContent = "Login";
+        usernameInput.setAttribute("autocomplete", "username");
+        passwordInput.setAttribute("autocomplete", "current-password");
+        switchAuthMode.textContent = "Don't have an account? Register";
+      } else {
+        modalTitle.textContent = "Create Your Profile";
+        authBtn.textContent = "Register";
+        usernameInput.setAttribute("autocomplete", "username");
+        passwordInput.setAttribute("autocomplete", "new-password");
+        switchAuthMode.textContent = "Already have an account? Login";
+      }
+      resetAuthForm();
+    }
+    // On page load, show modal if no user or not logged in
+    function checkAuthStatus() {
+      const user = getUser();
+      const loggedIn = getLoggedInUser();
+      if (!user) {
+        setMode(false); // Register mode
+        showModal();
+        hideDashboard();
+      } else if (!loggedIn || loggedIn !== user.username) {
+        setMode(true); // Login mode
+        showModal();
+        hideDashboard();
+      } else {
+        hideModal();
+        showDashboard(user.username);
+      }
+    }
+
+    // Switch between register & login
+    switchAuthMode.addEventListener('click', () => {
+      setMode(!isLoginMode);
+    });
+
+    // Handle form submit
+    authForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+      if (!username || !password) {
+        authError.textContent = "Please fill in all fields.";
+        return;
+      }
+      const existingUser = getUser();
+
+      if (isLoginMode) {
+        if (!existingUser || existingUser.username !== username) {
+          authError.textContent = "User not found. Please register.";
+          return;
+        }
+        if (existingUser.password !== password) {
+          authError.textContent = "Incorrect password. Try again.";
+          return;
+        }
+        setLoggedInUser(username);
+        hideModal();
+        showDashboard(username);
+      } else {
+        if (existingUser && existingUser.username === username) {
+          authError.textContent = "Username already exists. Please login.";
+          return;
+        }
+        saveUser(username, password);
+        setLoggedInUser(username);
+        hideModal();
+        showDashboard(username);
+      }
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      clearLoggedInUser();
+      checkAuthStatus();
+    });
+
+    // Check auth on load
+    window.onload = checkAuthStatus;
+
+  </script>
 </body>
 </html>
