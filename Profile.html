@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kaushal Student Dashboard</title>
+  <link href="https://fonts.googleapis.com/css?family=Segoe+UI:400,600,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --kaushal-orange: #ff9100;
+      --kaushal-blue: #2563eb;
+      --background: #f8fafc;
+      --card-bg: #fff;
+      --shadow: 0 4px 16px rgba(37,99,235,0.07);
+      --radius: 18px;
+      --transition: 0.18s cubic-bezier(.4,0,.2,1);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    body {
+      background: var(--background);
+      min-height: 100vh;
+      color: #222;
+    }
+    .navbar {
+      background: #fff;
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 10px 18px;
+      margin: 20px auto 24px auto;
+      max-width: 900px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .navbar .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: bold;
+      color: var(--kaushal-orange);
+      letter-spacing: 1px;
+    }
+    .navbar .brand img {
+      height: 32px;
+      vertical-align: middle;
+    }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+    }
+    .nav-links a {
+      color: #374151;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 16px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-links a.active,
+    .nav-links a:hover {
+      background: var(--kaushal-blue);
+      color: #fff;
+    }
+    .dashboard-container {
+      max-width: 900px;
+      margin: auto;
+      padding: 0 18px 40px 18px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 28px;
+    }
+    @media (max-width: 900px) {
+      .dashboard-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    .left-col, .right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 24px;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .card:hover {
+      box-shadow: 0 8px 32px rgba(37,99,235,0.13);
+      transform: translateY(-2px) scale(1.01);
+    }
+    /* Welcome */
+    .welcome {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .welcome img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #e0e7ff;
+      border: 2px solid var(--kaushal-orange);
+    }
+    .welcome-text h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--kaushal-blue);
+    }
+    .welcome-text p {
+      font-size: 15px;
+      color: #475569;
+    }
+    /* Progress Bar */
+    .progress-block {
+      margin-top: 10px;
+    }
+    .progress-label {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #2563eb;
+    }
+    .progress-bar-bg {
+      background: #e0e7ff;
+      border-radius: 999px;
+      height: 18px;
+      width: 100%;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      background: linear-gradient(90deg, var(--kaushal-orange), var(--kaushal-blue));
+      height: 100%;
+      border-radius: 999px;
+      width: 30%;
+      min-width: 24px;
+      transition: width 0.6s var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      color: #fff;
+      font-size: 13px;
+      font-weight: bold;
+      padding-right: 10px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(255,145,0,0.09);
+    }
+    /* Today's Tasks */
+    .tasks-list h3 {
+      color: var(--kaushal-orange);
+      font-size: 18px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .tasks-list ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .task-item {
+      display: flex;
+      align-items: center;
+      background: #f1f5f9;
+      border-radius: 9px;
+      padding: 9px 13px;
+      gap: 12px;
+      font-size: 15px;
+      transition: background var(--transition);
+    }
+    .task-item label {
+      flex: 1;
+      cursor: pointer;
+      user-select: none;
+    }
+    .task-item input[type="checkbox"] {
+      accent-color: var(--kaushal-blue);
+      width: 18px;
+      height: 18px;
+      margin-right: 10px;
+    }
+    .task-item input:checked + label {
+      text-decoration: line-through;
+      color: #64748b;
+    }
+    /* Quick links */
+    .quick-links h3 {
+      color: var(--kaushal-blue);
+      font-size: 18px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .quick-links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .quick-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #e0f2fe;
+      color: var(--kaushal-blue);
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 14px 0 14px 14px;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition), transform var(--transition);
+      box-shadow: 0 1px 5px rgba(37,99,235,0.05);
+      border: none;
+      text-decoration: none;
+    }
+    .quick-link:hover {
+      background: var(--kaushal-blue);
+      color: #fff;
+      transform: translateY(-2px) scale(1.04);
+    }
+    .quick-link .icon {
+      font-size: 19px;
+      background: #fff;
+      color: var(--kaushal-blue);
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 6px;
+      box-shadow: 0 2px 6px rgba(255,145,0,0.06);
+    }
+    .quick-link:hover .icon {
+      background: #fff3e0;
+      color: var(--kaushal-orange);
+    }
+    /* Achievements */
+    .achievements h3 {
+      color: var(--kaushal-orange);
+      font-size: 18px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .badges-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      background: linear-gradient(135deg, #fffbe7 60%, #e0f2fe 100%);
+      border-radius: 15px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 14px;
+      box-shadow: 0 2px 9px rgba(255,145,0,0.06);
+      gap: 8px;
+      color: #b45309;
+      margin-bottom: 6px;
+      min-width: 120px;
+      transition: background var(--transition), color var(--transition), transform var(--transition);
+    }
+    .badge .badge-icon {
+      font-size: 18px;
+    }
+    .badge:hover {
+      background: linear-gradient(135deg, #ffe0b2 60%, #bae6fd 100%);
+      color: var(--kaushal-blue);
+      transform: translateY(-1px) scale(1.05);
+    }
+    /* Responsive */
+    @media (max-width: 600px) {
+      .navbar, .dashboard-container {
+        padding: 0 6px;
+      }
+      .navbar {
+        flex-direction: column;
+        gap: 10px;
+        border-radius: 0 0 var(--radius) var(--radius);
+        margin: 0 0 22px 0;
+      }
+      .dashboard-container {
+        gap: 16px;
+      }
+      .card {
+        padding: 18px 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="brand">
+      <img src="kaushal.png" alt="Kaushal Logo">
+      Kaushal
+    </div>
+    <div class="nav-links">
+      <a href="#" class="active">Home</a>
+      <a href="#">Dashboard</a>
+      <a href="#">Profile</a>
+      <a href="#">Logout</a>
+    </div>
+  </nav>
+
+  <main class="dashboard-container">
+    <!-- Left Column -->
+    <div class="left-col">
+      <!-- Welcome block -->
+      <div class="card welcome">
+        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Student profile photo">
+        <div class="welcome-text">
+          <h2>Welcome, Riya!</h2>
+          <p>Hope you're ready to learn something amazing today. 🚀</p>
+        </div>
+      </div>
+      <!-- Progress -->
+      <div class="card progress-block">
+        <div class="progress-label">Progress: You completed <b>3</b> out of <b>10</b> chapters</div>
+        <div class="progress-bar-bg" aria-label="Progress bar">
+          <div class="progress-bar-fill" style="width:30%;">30%</div>
+        </div>
+      </div>
+      <!-- Today's Tasks -->
+      <div class="card tasks-list">
+        <h3>Today's Tasks</h3>
+        <ul>
+          <li class="task-item">
+            <input type="checkbox" id="task1"><label for="task1">Watch video lesson: Chemical Reactions</label>
+          </li>
+          <li class="task-item">
+            <input type="checkbox" id="task2"><label for="task2">Attempt Quiz: Algebra Basics</label>
+          </li>
+          <li class="task-item">
+            <input type="checkbox" id="task3"><label for="task3">Complete 2 Practice Problems</label>
+          </li>
+          <li class="task-item">
+            <input type="checkbox" id="task4"><label for="task4">Revise Notes: Photosynthesis</label>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- Right Column -->
+    <div class="right-col">
+      <!-- Quick Links -->
+      <div class="card quick-links">
+        <h3>Quick Links</h3>
+        <div class="quick-links-grid">
+          <a class="quick-link" href="#">
+            <span class="icon">📚</span> Courses
+          </a>
+          <a class="quick-link" href="#">
+            <span class="icon">📝</span> Quizzes
+          </a>
+          <a class="quick-link" href="#">
+            <span class="icon">🗒️</span> Notes
+          </a>
+          <a class="quick-link" href="#">
+            <span class="icon">❓</span> Ask Doubt
+          </a>
+        </div>
+      </div>
+      <!-- Achievements / Badges -->
+      <div class="card achievements">
+        <h3>Your Badges</h3>
+        <div class="badges-row">
+          <div class="badge"><span class="badge-icon">🌟</span> Top Scorer</div>
+          <div class="badge"><span class="badge-icon">🔥</span> 7-Day Streak</div>
+          <div class="badge"><span class="badge-icon">🏅</span> Quiz Master</div>
+          <div class="badge"><span class="badge-icon">🎯</span> Task Pro</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
