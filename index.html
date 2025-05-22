@@ -233,7 +233,7 @@
   <img src="kaushal.png" alt="kaushal logo" style="height:32px;">
       </div>
     </div>
-    <button class="sign-in">Sign In</button>
+    <button class="login-Btn">Sign In</button>
   </div>
 
   <!-- Powered by -->
@@ -291,6 +291,11 @@
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeSidebar();
     });
+    
+  document.getElementById('loginBtn').onclick = function() {
+    window.location.href = 'profile.html';
+  };
+
   </script>
 </body>
 </html>
