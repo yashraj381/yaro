@@ -211,6 +211,134 @@
 </head>
 <body>
 
+  <!-- Hero Banner Section for Kaushal -->
+<section class="hero-section">
+  <div class="hero-content">
+    <h1>Smart Learning, Real Progress.</h1>
+    <p>Interactive quizzes, performance tracking, and fun challenges for students of all ages.</p>
+    <div class="hero-buttons">
+      <button class="cta-btn primary">Start Learning</button>
+      <button class="cta-btn secondary">Try a Free Quiz</button>
+    </div>
+  </div>
+  <div class="hero-illustration">
+    <!-- Sample SVG illustration (student + robot). Replace with animation if desired -->
+    <svg width="200" height="180" viewBox="0 0 200 180" fill="none">
+      <ellipse cx="100" cy="160" rx="80" ry="16" fill="#E0E7FF"/>
+      <circle cx="65" cy="90" r="40" fill="#A7F3D0"/>
+      <rect x="120" y="70" width="48" height="48" rx="15" fill="#FDE68A"/>
+      <circle cx="144" cy="94" r="10" fill="#F59E42"/>
+      <rect x="60" y="120" width="56" height="10" rx="5" fill="#6366F1"/>
+      <circle cx="90" cy="80" r="10" fill="#fff"/>
+      <circle cx="110" cy="80" r="10" fill="#fff"/>
+      <ellipse cx="90" cy="84" rx="2" ry="3" fill="#6366F1"/>
+      <ellipse cx="110" cy="84" rx="2" ry="3" fill="#6366F1"/>
+    </svg>
+  </div>
+</section>
+
+<style>
+.hero-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 48px 24px 32px 24px;
+  background: linear-gradient(100deg, #f0f9ff 0%, #fff7ed 100%);
+  border-radius: 20px;
+  box-shadow: 0 6px 32px 0 rgba(80, 80, 80, 0.09);
+  gap: 40px;
+  margin: 32px auto 0 auto;
+  max-width: 1100px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-content {
+  flex: 1 1 320px;
+  z-index: 2;
+}
+.hero-content h1 {
+  font-size: 2.3rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 16px;
+  line-height: 1.2;
+  letter-spacing: -1px;
+}
+.hero-content p {
+  color: #334155;
+  font-size: 1.1rem;
+  margin-bottom: 28px;
+  max-width: 400px;
+}
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.cta-btn {
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: box-shadow 0.19s, background 0.19s;
+  box-shadow: 0 4px 20px 0 rgba(100,100,100,0.11);
+}
+.cta-btn.primary {
+  background: linear-gradient(90deg, #6366f1, #06b6d4);
+  color: #fff;
+}
+.cta-btn.secondary {
+  background: #fff;
+  color: #6366f1;
+  border: 2px solid #6366f1;
+}
+.cta-btn:hover, .cta-btn:focus {
+  box-shadow: 0 6px 32px 0 rgba(80, 80, 80, 0.18);
+  opacity: 0.94;
+}
+.hero-illustration {
+  flex: 1 1 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 200px;
+}
+@media (max-width: 900px) {
+  .hero-section {
+    flex-direction: column-reverse;
+    gap: 32px;
+    padding: 32px 8vw 24px 8vw;
+    border-radius: 0 0 20px 20px;
+  }
+  .hero-illustration {
+    margin-bottom: 0;
+    min-width: 180px;
+  }
+  .hero-content {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+@media (max-width: 600px) {
+  .hero-section {
+    padding: 28px 3vw 18px 3vw;
+    gap: 18px;
+  }
+  .hero-content h1 {
+    font-size: 1.35rem;
+  }
+  .hero-content p {
+    font-size: 0.99rem;
+  }
+  .hero-illustration svg {
+    width: 130px;
+    height: 110px;
+  }
+}
+</style>
+
   <!-- Sidebar overlay -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <!-- Sidebar -->
