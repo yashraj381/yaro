@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Choose Your Level - Science | Kaushal</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --science: #34d399;
+      --beginner: #fbbf24;
+      --intermediate: #60a5fa;
+      --advanced: #a78bfa;
+      --practice: #fb7185;
+      --card-radius: 20px;
+      --shadow: 0 4px 18px 0 rgba(80,80,80,0.10);
+      --shadow-hover: 0 8px 32px 0 rgba(80,80,80,0.15);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(120deg, #f1f5f9 0%, #e0f2fe 100%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #1e293b;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 16px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+    }
+    .back-btn {
+      background: #fff;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-size: 1rem;
+      cursor: pointer;
+      width: fit-content;
+      margin-bottom: 4px;
+      transition: background 0.14s, color 0.14s, box-shadow 0.14s;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .back-btn:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+    .page-heading {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--science);
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .assistant-tip-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+    .robot-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg,#818cf8 60%,#a7f3d0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 2px 8px 0 rgba(80,80,80,0.09);
+      border: 2.5px solid #fff;
+    }
+    .robot-avatar svg {
+      width: 34px;
+      height: 34px;
+    }
+    .robot-message {
+      font-size: 1.08rem;
+      color: #6366f1;
+      background: #fff;
+      padding: 10px 20px;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px 0 rgba(80,80,80,0.09);
+      font-weight: 500;
+      align-self: center;
+    }
+    .levels-grid {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .level-card {
+      flex: 1 1 180px;
+      max-width: 220px;
+      min-width: 170px;
+      background: #fff;
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 16px 22px 16px;
+      transition: transform 0.14s, box-shadow 0.18s;
+      position: relative;
+      border-top: 8px solid var(--science);
+    }
+    .level-card-beginner { border-top-color: var(--beginner);}
+    .level-card-intermediate { border-top-color: var(--intermediate);}
+    .level-card-advanced { border-top-color: var(--advanced);}
+    .level-card-practice { border-top-color: var(--practice);}
+    .level-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px 0 rgba(80,80,80,0.09);
+      font-size: 2rem;
+      color: #fff;
+    }
+    .level-card-beginner .level-icon { background: var(--beginner);}
+    .level-card-intermediate .level-icon { background: var(--intermediate);}
+    .level-card-advanced .level-icon { background: var(--advanced);}
+    .level-card-practice .level-icon { background: var(--practice);}
+    .level-card h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.12rem;
+      color: #1e293b;
+      font-weight: 700;
+      text-align: center;
+    }
+    .level-card p {
+      color: #374151;
+      font-size: 0.96rem;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .progress-indicator {
+      font-size: 0.96rem;
+      color: #6366f1;
+      font-weight: 500;
+      margin-bottom: 12px;
+      background: #f1f5f9;
+      border-radius: 6px;
+      padding: 3px 12px;
+      display: inline-block;
+    }
+    .start-quiz-btn {
+      background: var(--science);
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 24px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.17s, box-shadow 0.17s;
+      box-shadow: 0 2px 8px 0 rgba(80,80,80,0.08);
+    }
+    .start-quiz-btn:hover, .start-quiz-btn:focus {
+      background: #059669;
+    }
+    @media (max-width: 900px) {
+      .levels-grid { gap: 16px; }
+      .level-card { min-width: 140px; padding: 20px 10px 14px; }
+      .assistant-tip-row { gap: 8px; }
+    }
+    @media (max-width: 650px) {
+      .container { padding: 16px 3vw 30px; }
+      .levels-grid { flex-direction: column; align-items: stretch;}
+      .level-card { max-width: unset; min-width: 0; width: 100%; }
+      .page-heading { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">
+      <!-- Back arrow SVG -->
+      <svg width="18" height="18" fill="none" viewBox="0 0 18 18" style="vertical-align:middle;"><path d="M12 15L6 9l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Subjects
+    </button>
+
+    <h1 class="page-heading">Choose Your Level - Science</h1>
+
+    <div class="assistant-tip-row">
+      <span class="robot-avatar">
+        <!-- Robot SVG -->
+        <svg viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="32" r="30" fill="#fff"/>
+          <ellipse cx="32" cy="38" rx="16" ry="11" fill="#a7f3d0" opacity="0.6"/>
+          <ellipse cx="24" cy="28.5" rx="4.8" ry="8" fill="#6366f1"/>
+          <ellipse cx="40" cy="28.5" rx="4.8" ry="8" fill="#6366f1"/>
+          <ellipse cx="24" cy="31" rx="1.5" ry="2" fill="#fff"/>
+          <ellipse cx="40" cy="31" rx="1.5" ry="2" fill="#fff"/>
+          <ellipse cx="32" cy="42" rx="4.5" ry="2.2" fill="#6366f1"/>
+          <ellipse cx="32" cy="41.5" rx="2.8" ry="1.2" fill="#fff" opacity="0.8"/>
+        </svg>
+      </span>
+      <span class="robot-message">Choose a level to begin your journey!</span>
+    </div>
+
+    <div class="levels-grid">
+      <!-- Beginner Card -->
+      <div class="level-card level-card-beginner">
+        <div class="level-icon" title="Beginner">
+          <!-- Lightbulb Icon -->
+          <svg width="28" height="28" fill="none" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="#fbbf24"/><path d="M14 20v2M11 24h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M14 6a6 6 0 016 6c0 2.25-1.58 3.97-2.56 4.93-.74.7-1.19 1.69-1.19 2.73V20h-2v-1.34c0-1.04-.45-2.03-1.19-2.73C9.58 15.97 8 14.25 8 12a6 6 0 016-6z" stroke="#fff" stroke-width="2"/></svg>
+        </div>
+        <h3>Beginner</h3>
+        <p>Start with the basics of Science in a simple and fun way.</p>
+        <div class="progress-indicator">You’ve completed 2/10 quizzes</div>
+        <button class="start-quiz-btn" onclick="window.location.href='quize-interface.html'">Start Quiz</button>
+      </div>
+      <!-- Intermediate Card -->
+      <div class="level-card level-card-intermediate">
+        <div class="level-icon" title="Intermediate">
+          <!-- Atom Icon -->
+          <svg width="28" height="28" fill="none" viewBox="0 0 28 28">
+            <circle cx="14" cy="14" r="10" fill="#60a5fa"/>
+            <ellipse cx="14" cy="14" rx="5" ry="10" stroke="#fff" stroke-width="1.5"/>
+            <ellipse cx="14" cy="14" rx="10" ry="5" stroke="#fff" stroke-width="1.5"/>
+            <circle cx="14" cy="14" r="2.2" fill="#fff" stroke="#1e40af" stroke-width="1"/>
+          </svg>
+        </div>
+        <h3>Intermediate</h3>
+        <p>Dive deeper into concepts and apply your knowledge.</p>
+        <div class="progress-indicator">You’ve completed 5/12 quizzes</div>
+        <button class="start-quiz-btn">Start Quiz</button>
+      </div>
+      <!-- Advanced Card -->
+      <div class="level-card level-card-advanced">
+        <div class="level-icon" title="Advanced">
+          <!-- Rocket Icon -->
+          <svg width="28" height="28" fill="none" viewBox="0 0 28 28">
+            <path d="M14 3l4 7-4 13-4-13 4-7z" fill="#a78bfa" stroke="#fff" stroke-width="1.5"/>
+            <circle cx="14" cy="9" r="2" fill="#fff"/>
+            <path d="M14 23v2" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round"/>
+            <ellipse cx="14" cy="25" rx="2.5" ry="0.8" fill="#a78bfa" opacity="0.7"/>
+          </svg>
+        </div>
+        <h3>Advanced</h3>
+        <p>Challenge yourself with tough questions and real-world problems.</p>
+        <div class="progress-indicator">You’ve completed 1/8 quizzes</div>
+        <button class="start-quiz-btn">Start Quiz</button>
+      </div>
+      <!-- Practice Mode Card -->
+      <div class="level-card level-card-practice">
+        <div class="level-icon" title="Practice Mode">
+          <!-- Stopwatch Icon -->
+          <svg width="28" height="28" fill="none" viewBox="0 0 28 28">
+            <circle cx="14" cy="14" r="10" fill="#fb7185"/>
+            <path d="M14 7v4l4 2" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="14" cy="14" r="6" stroke="#fff" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h3>Practice Mode</h3>
+        <p>Sharpen your skills with unlimited random questions.</p>
+        <div class="progress-indicator">You’ve completed 0/∞ quizzes</div>
+        <button class="start-quiz-btn">Start Quiz</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
