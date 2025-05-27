@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>kaushal- Learn Smarter</title>
   <style>
+    :root {
+      --primary: #f59e0b;
+      --secondary: #6366f1;
+      --accent: #06b6d4;
+      --text-main: #222;
+      --text-light: #fff;
+      --surface: #fff;
+      --radius: 8px;
+      --shadow: 0 2px 5px rgba(0,0,0,0.10);
+      --shadow-lg: 0 6px 32px 0 rgba(80, 80, 80, 0.09);
+    }
     * {
       margin: 0;
       padding: 0;
@@ -12,43 +23,63 @@
       font-family: 'Segoe UI', sans-serif;
     }
     body {
-      background: #fff;
-      color: #222;
+      background: var(--surface);
+      color: var(--text-main);
+      min-height: 100vh;
     }
     .header {
+      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 16px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      left: 0;
+      z-index: 2000;
     }
     .menu-icon {
-      width: 24px;
-      height: 18px;
+      width: 28px;
+      height: 22px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
-      z-index: 1101;
+      z-index: 2100;
     }
     .menu-icon div {
-      height: 3px;
+      height: 4px;
       background: #333;
       border-radius: 2px;
       transition: background 0.2s;
     }
     .logo {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
-      color: orange;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo img {
+      height: 36px;
+      vertical-align: middle;
     }
     .sign-in {
       border: 1px solid #333;
-      padding: 6px 12px;
+      padding: 8px 16px;
       border-radius: 4px;
-      font-size: 14px;
+      font-size: 16px;
       cursor: pointer;
       background: transparent;
+      transition: background 0.2s, color 0.2s;
+    }
+    .sign-in:hover {
+      background: var(--primary);
+      color: var(--text-light);
+      border-color: var(--primary);
     }
     .powered {
       text-align: center;
@@ -57,8 +88,8 @@
       margin-top: 4px;
     }
     .banner {
-      background: orange;
-      color: white;
+      background: var(--primary);
+      color: var(--text-light);
       text-align: center;
       padding: 24px 12px;
     }
@@ -71,19 +102,27 @@
       font-size: 16px;
     }
     .banner button {
-      background: black;
-      color: white;
+      background: #222;
+      color: #fff;
       padding: 10px 20px;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .banner button:hover {
+      background: var(--secondary);
     }
     .section {
       padding: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
     }
     .section h3 {
       font-size: 18px;
-      color: #f59e0b;
+      color: var(--primary);
       margin-bottom: 10px;
     }
     .grid {
@@ -96,7 +135,7 @@
       border-radius: 8px;
       text-align: center;
       font-weight: bold;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: var(--shadow);
     }
     .jee {
       background: #ede9fe;
@@ -120,7 +159,7 @@
       border-radius: 6px;
       font-weight: bold;
       font-size: 14px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: var(--shadow);
     }
     .tag.jee {
       background: #fee2e2;
@@ -139,7 +178,7 @@
       position: fixed;
       top: 0; right: 0; bottom: 0; left: 0;
       background: rgba(0,0,0,0.3);
-      z-index: 1100;
+      z-index: 1999;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s;
@@ -156,7 +195,7 @@
       width: 280px;
       background: #fff;
       box-shadow: -2px 0 8px rgba(0,0,0,0.13);
-      z-index: 1101;
+      z-index: 2100;
       display: flex;
       flex-direction: column;
       padding: 32px 20px 20px 20px;
@@ -167,7 +206,7 @@
     }
     .sidebar h2 {
       font-size: 22px;
-      color: orange;
+      color: var(--primary);
       margin-bottom: 24px;
     }
     .sidebar button {
@@ -182,7 +221,7 @@
       transition: background 0.18s;
     }
     .sidebar .ncert-btn {
-      background: #f59e0b;
+      background: var(--primary);
       color: #fff;
       margin-bottom: 12px;
     }
@@ -200,144 +239,134 @@
       cursor: pointer;
       color: #888;
     }
-    @media (max-width: 500px) {
-      .sidebar {
-        width: 80vw;
+    /* Hero Section */
+    .hero-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 48px 24px 32px 24px;
+      background: linear-gradient(100deg, #f0f9ff 0%, #fff7ed 100%);
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg);
+      gap: 40px;
+      margin: 32px auto 0 auto;
+      max-width: 1100px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-content {
+      flex: 1 1 320px;
+      z-index: 2;
+    }
+    .hero-content h1 {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 16px;
+      line-height: 1.2;
+      letter-spacing: -1px;
+    }
+    .hero-content p {
+      color: #334155;
+      font-size: 1.1rem;
+      margin-bottom: 28px;
+      max-width: 400px;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .cta-btn {
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: box-shadow 0.19s, background 0.19s;
+      box-shadow: 0 4px 20px 0 rgba(100,100,100,0.11);
+    }
+    .cta-btn.primary {
+      background: linear-gradient(90deg, var(--secondary), var(--accent));
+      color: #fff;
+    }
+    .cta-btn.secondary {
+      background: #fff;
+      color: var(--secondary);
+      border: 2px solid var(--secondary);
+    }
+    .cta-btn:hover, .cta-btn:focus {
+      box-shadow: 0 6px 32px 0 rgba(80, 80, 80, 0.18);
+      opacity: 0.94;
+    }
+    .hero-illustration {
+      flex: 1 1 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 200px;
+    }
+    /* Responsive Design */
+    @media (max-width: 900px) {
+      .hero-section {
+        flex-direction: column-reverse;
+        gap: 32px;
+        padding: 32px 8vw 24px 8vw;
+        border-radius: 0 0 20px 20px;
+      }
+      .hero-illustration {
+        margin-bottom: 0;
         min-width: 180px;
-        padding: 28px 10px 10px 14px;
+      }
+      .hero-content {
+        align-items: flex-start;
+        text-align: left;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 600px) {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 12px;
+      }
+      .hero-section {
+        padding: 28px 3vw 18px 3vw;
+        gap: 18px;
+      }
+      .hero-content h1 {
+        font-size: 1.35rem;
+      }
+      .hero-content p {
+        font-size: 0.99rem;
+      }
+      .hero-illustration svg {
+        width: 130px;
+        height: 110px;
       }
     }
   </style>
 </head>
 <body>
-
-  <!-- Hero Banner Section for Kaushal -->
-<section class="hero-section">
-  <div class="hero-content">
-    <h1>Smart Learning, Real Progress.</h1>
-    <p>Interactive quizzes, performance tracking, and fun challenges for students of all ages.</p>
-    <div class="hero-buttons">
-      <button class="cta-btn primary">Start Learning</button>
-      <button class="cta-btn secondary">Try a Free Quiz</button>
+  <!-- Header always at the top -->
+  <div class="header">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div class="menu-icon" id="menuIcon" tabindex="0" aria-label="Open menu">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="logo">
+        <img src="kaushal.png" alt="kaushal logo">
+        kaushal
+      </div>
     </div>
+    <button class="sign-in" onclick="window.location.href='profile.html'">Sign In</button>
   </div>
-  <div class="hero-illustration">
-    <!-- Sample SVG illustration (student + robot). Replace with animation if desired -->
-    <svg width="200" height="180" viewBox="0 0 200 180" fill="none">
-      <ellipse cx="100" cy="160" rx="80" ry="16" fill="#E0E7FF"/>
-      <circle cx="65" cy="90" r="40" fill="#A7F3D0"/>
-      <rect x="120" y="70" width="48" height="48" rx="15" fill="#FDE68A"/>
-      <circle cx="144" cy="94" r="10" fill="#F59E42"/>
-      <rect x="60" y="120" width="56" height="10" rx="5" fill="#6366F1"/>
-      <circle cx="90" cy="80" r="10" fill="#fff"/>
-      <circle cx="110" cy="80" r="10" fill="#fff"/>
-      <ellipse cx="90" cy="84" rx="2" ry="3" fill="#6366F1"/>
-      <ellipse cx="110" cy="84" rx="2" ry="3" fill="#6366F1"/>
-    </svg>
-  </div>
-</section>
-
-<style>
-.hero-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 48px 24px 32px 24px;
-  background: linear-gradient(100deg, #f0f9ff 0%, #fff7ed 100%);
-  border-radius: 20px;
-  box-shadow: 0 6px 32px 0 rgba(80, 80, 80, 0.09);
-  gap: 40px;
-  margin: 32px auto 0 auto;
-  max-width: 1100px;
-  position: relative;
-  overflow: hidden;
-}
-.hero-content {
-  flex: 1 1 320px;
-  z-index: 2;
-}
-.hero-content h1 {
-  font-size: 2.3rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 16px;
-  line-height: 1.2;
-  letter-spacing: -1px;
-}
-.hero-content p {
-  color: #334155;
-  font-size: 1.1rem;
-  margin-bottom: 28px;
-  max-width: 400px;
-}
-.hero-buttons {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.cta-btn {
-  padding: 12px 28px;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: box-shadow 0.19s, background 0.19s;
-  box-shadow: 0 4px 20px 0 rgba(100,100,100,0.11);
-}
-.cta-btn.primary {
-  background: linear-gradient(90deg, #6366f1, #06b6d4);
-  color: #fff;
-}
-.cta-btn.secondary {
-  background: #fff;
-  color: #6366f1;
-  border: 2px solid #6366f1;
-}
-.cta-btn:hover, .cta-btn:focus {
-  box-shadow: 0 6px 32px 0 rgba(80, 80, 80, 0.18);
-  opacity: 0.94;
-}
-.hero-illustration {
-  flex: 1 1 280px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 200px;
-}
-@media (max-width: 900px) {
-  .hero-section {
-    flex-direction: column-reverse;
-    gap: 32px;
-    padding: 32px 8vw 24px 8vw;
-    border-radius: 0 0 20px 20px;
-  }
-  .hero-illustration {
-    margin-bottom: 0;
-    min-width: 180px;
-  }
-  .hero-content {
-    align-items: flex-start;
-    text-align: left;
-  }
-}
-@media (max-width: 600px) {
-  .hero-section {
-    padding: 28px 3vw 18px 3vw;
-    gap: 18px;
-  }
-  .hero-content h1 {
-    font-size: 1.35rem;
-  }
-  .hero-content p {
-    font-size: 0.99rem;
-  }
-  .hero-illustration svg {
-    width: 130px;
-    height: 110px;
-  }
-}
-</style>
 
   <!-- Sidebar overlay -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -349,22 +378,6 @@
     <button class="yaro-btn" onclick="window.location.href='yaro.html'">Talk to Yaro</button>
   </nav>
 
-  <!-- Header -->
-  <div class="header">
-    <div style="display: flex; align-items: center; gap: 12px;">
-      <div class="menu-icon" id="menuIcon" tabindex="0" aria-label="Open menu">
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-      <div class="logo">
-  <img src="kaushal.png" alt="kaushal logo" style="height:32px;">
-      </div>
-    </div>
-    <button class="Sign-In" onclick="window.location.href='profile.html'">Sign In</button>
-  </div>
-
-  <!-- Powered by -->
   <div class="powered">Powered by Yashraj Pawar</div>
 
   <!-- Banner -->
@@ -373,6 +386,537 @@
     <p>FLAT ₹20,000 OFF on 2-Year JEE/NEET Course</p>
     <button>Enroll Now</button>
   </div>
+
+  <!-- Hero Banner Section for Kaushal -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Smart Learning, Real Progress.</h1>
+      <p>Interactive quizzes, performance tracking, and fun challenges for students of all ages.</p>
+      <div class="hero-buttons">
+        <button class="cta-btn primary" 
+        <!-- Start Learning Button with Modern Transition Effect -->
+<style>
+.kaushal-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 48px 0;
+}
+.kaushal-btn {
+  position: relative;
+  padding: 16px 38px;
+  background: linear-gradient(90deg, #6366f1, #06b6d4 90%);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 40px;
+  box-shadow: 0 8px 32px rgba(80,80,80,0.13);
+  cursor: pointer;
+  outline: none;
+  transition: 
+    box-shadow 0.25s,
+    transform 0.15s,
+    background 0.22s;
+  overflow: hidden;
+  min-width: 180px;
+}
+.kaushal-btn:active {
+  animation: kaushal-bounce 0.5s;
+}
+.kaushal-btn.glow {
+  box-shadow: 0 0 0 5px #a5b4fc66, 0 8px 32px rgba(80,80,80,0.13);
+  background: linear-gradient(90deg, #06b6d4, #6366f1 90%);
+  transform: scale(1.05);
+}
+@keyframes kaushal-bounce {
+  0%   { transform: scale(1);}
+  20%  { transform: scale(1.08);}
+  55%  { transform: scale(0.97);}
+  80%  { transform: scale(1.03);}
+  100% { transform: scale(1);}
+}
+
+/* Loading Overlay */
+.kaushal-loading-overlay {
+  position: absolute;
+  left: 0; top: 0;
+  right: 0; bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(250,250,253,0.99);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 40px;
+  z-index: 2;
+  animation: kaushal-overlay-fadein 0.18s;
+}
+@keyframes kaushal-overlay-fadein {
+  from { opacity: 0;}
+  to   { opacity: 1;}
+}
+/* Spinner */
+.kaushal-spinner {
+  width: 34px;
+  height: 34px;
+  border: 4px solid #bae6fd;
+  border-top: 4px solid #6366f1;
+  border-radius: 50%;
+  animation: kaushal-spin 0.8s linear infinite;
+  margin-bottom: 16px;
+}
+@keyframes kaushal-spin {
+  to { transform: rotate(360deg);}
+}
+.kaushal-loading-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #6366f1;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .kaushal-btn {
+    font-size: 1rem;
+    padding: 13px 18px;
+    border-radius: 30px;
+    min-width: 130px;
+  }
+  .kaushal-loading-overlay {
+    font-size: 0.95rem;
+    border-radius: 30px;
+  }
+}
+</style>
+
+<div class="kaushal-btn-wrapper">
+  <button class="kaushal-btn" id="startLearningBtn">
+    Start Learning
+    <span class="kaushal-loading-overlay" id="kaushalLoadingOverlay" style="display:none;">
+      <div class="kaushal-spinner"></div>
+      <div class="kaushal-loading-text">Preparing your learning journey...</div>
+    </span>
+  </button>
+</div>
+<script>
+const btn = document.getElementById('startLearningBtn');
+const overlay = document.getElementById('kaushalLoadingOverlay');
+
+btn.addEventListener('click', function(e) {
+  // Add glow and bounce
+  btn.classList.add('glow');
+  btn.blur(); // remove focus (for mobile)
+  // Show loading overlay
+  overlay.style.display = 'flex';
+  // Prevent double-clicks
+  btn.disabled = true;
+
+  setTimeout(() => {
+    // Redirect after 2 seconds
+    window.location.href = 'dashboard.html';
+  }, 2000);
+});
+</script>
+
+
+        <button class="cta-btn secondary">Try a Free Quiz</button>
+      </div>
+    </div>
+    <div class="hero-illustration">
+      <!-- Sample SVG illustration (student + robot). Replace with animation if desired -->
+      <svg width="200" height="180" viewBox="0 0 200 180" fill="none">
+        <ellipse cx="100" cy="160" rx="80" ry="16" fill="#E0E7FF"/>
+        <circle cx="65" cy="90" r="40" fill="#A7F3D0"/>
+        <rect x="120" y="70" width="48" height="48" rx="15" fill="#FDE68A"/>
+        <circle cx="144" cy="94" r="10" fill="#F59E42"/>
+        <rect x="60" y="120" width="56" height="10" rx="5" fill="#6366F1"/>
+        <circle cx="90" cy="80" r="10" fill="#fff"/>
+        <circle cx="110" cy="80" r="10" fill="#fff"/>
+        <ellipse cx="90" cy="84" rx="2" ry="3" fill="#6366F1"/>
+        <ellipse cx="110" cy="84" rx="2" ry="3" fill="#6366F1"/>
+      </svg>
+    </div>
+  </section>
+  
+  <!-- Modern Benefits Section for Kaushal -->
+<section class="kaushal-benefits">
+  <h2 class="benefits-heading">Why Students &amp; Parents Love Kaushal</h2>
+  <div class="benefits-grid">
+    <!-- Card 1: Safe & Distraction-Free -->
+    <div class="benefit-card">
+      <div class="icon-bg" style="background: linear-gradient(135deg,#6366f1 60%,#a7f3d0 100%);">
+        <!-- Shield Icon (Safe) -->
+        <svg width="38" height="38" fill="none" viewBox="0 0 38 38">
+          <rect width="38" height="38" rx="12" fill="none"/>
+          <path d="M19 32s10-4.5 10-12.5V8.43L19 5 9 8.43v11.07C9 27.5 19 32 19 32z" fill="#fff" stroke="#6366f1" stroke-width="2"/>
+          <path d="M15.5 19.5l2.5 2.5 4.5-4.5" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3>Safe &amp; Distraction-Free</h3>
+      <p>No ads, child-safe, and focused learning.</p>
+    </div>
+    <!-- Card 2: Track Progress & Performance -->
+    <div class="benefit-card">
+      <div class="icon-bg" style="background: linear-gradient(135deg,#fbbf24 60%,#fde68a 100%);">
+        <!-- Analytics Icon -->
+        <svg width="38" height="38" fill="none" viewBox="0 0 38 38">
+          <rect width="38" height="38" rx="12" fill="none"/>
+          <rect x="11" y="21" width="4" height="7" rx="2" fill="#fff" stroke="#f59e0b" stroke-width="2"/>
+          <rect x="17" y="15" width="4" height="13" rx="2" fill="#fff" stroke="#f59e0b" stroke-width="2"/>
+          <rect x="23" y="18" width="4" height="10" rx="2" fill="#fff" stroke="#f59e0b" stroke-width="2"/>
+        </svg>
+      </div>
+      <h3>Track Progress &amp; Performance</h3>
+      <p>Weekly reports and score dashboards for students and parents.</p>
+    </div>
+    <!-- Card 3: Fun, Gamified Learning -->
+    <div class="benefit-card">
+      <div class="icon-bg" style="background: linear-gradient(135deg,#f472b6 60%,#f9a8d4 100%);">
+        <!-- Trophy/Badge Icon -->
+        <svg width="38" height="38" fill="none" viewBox="0 0 38 38">
+          <rect width="38" height="38" rx="12" fill="none"/>
+          <circle cx="19" cy="15" r="7" fill="#fff" stroke="#e11d48" stroke-width="2"/>
+          <path d="M13 28l3-4h6l3 4-6 2-6-2z" fill="#fff" stroke="#e11d48" stroke-width="2"/>
+          <circle cx="19" cy="15" r="2" fill="#e11d48"/>
+        </svg>
+      </div>
+      <h3>Fun, Gamified Learning</h3>
+      <p>Earn points, badges, and certificates while learning.</p>
+    </div>
+    <!-- Card 4: AI Assistant Help -->
+    <div class="benefit-card">
+      <div class="icon-bg" style="background: linear-gradient(135deg,#06b6d4 60%,#a5b4fc 100%);">
+        <!-- AI/Chatbot Icon -->
+        <svg width="38" height="38" fill="none" viewBox="0 0 38 38">
+          <rect width="38" height="38" rx="12" fill="none"/>
+          <ellipse cx="19" cy="18" rx="8" ry="8" fill="#fff" stroke="#0ea5e9" stroke-width="2"/>
+          <ellipse cx="16" cy="17" rx="1" ry="2" fill="#38bdf8"/>
+          <ellipse cx="22" cy="17" rx="1" ry="2" fill="#38bdf8"/>
+          <rect x="15" y="22" width="8" height="2" rx="1" fill="#dbeafe"/>
+        </svg>
+      </div>
+      <h3>AI Assistant Help</h3>
+      <p>Instant answers and study help with our smart assistant.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+.kaushal-benefits {
+  max-width: 1100px;
+  margin: 56px auto 0 auto;
+  padding: 32px 16px 48px 16px;
+  background: #f8fafc;
+  border-radius: 20px;
+  box-shadow: 0 4px 32px 0 rgba(80,80,80,0.07);
+}
+.benefits-heading {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 36px;
+  letter-spacing: -1px;
+}
+.benefits-grid {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.benefit-card {
+  flex: 1 1 210px;
+  max-width: 250px;
+  min-width: 220px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 32px 22px 28px 22px;
+  box-shadow: 0 4px 18px 0 rgba(100,100,100,0.09);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.15s, box-shadow 0.18s;
+  cursor: pointer;
+}
+.benefit-card:hover {
+  box-shadow: 0 8px 32px 0 rgba(80,80,80,0.15);
+  transform: translateY(-4px) scale(1.025);
+}
+.icon-bg {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px 0 rgba(80,80,80,0.09);
+}
+.benefit-card h3 {
+  margin: 0 0 12px 0;
+  font-size: 1.12rem;
+  color: #111827;
+  font-weight: 700;
+  text-align: center;
+}
+.benefit-card p {
+  color: #374151;
+  font-size: 1rem;
+  text-align: center;
+}
+@media (max-width: 900px) {
+  .benefits-grid {
+    gap: 16px;
+  }
+  .benefit-card {
+    min-width: 180px;
+    padding: 26px 14px 22px 14px;
+  }
+}
+@media (max-width: 600px) {
+  .benefits-heading {
+    font-size: 1.25rem;
+    margin-bottom: 24px;
+  }
+  .benefits-grid {
+    flex-direction: column;
+    gap: 18px;
+    align-items: stretch;
+  }
+  .benefit-card {
+    max-width: unset;
+    min-width: 0;
+    width: 100%;
+    padding: 24px 10px 16px 10px;
+  }
+}
+</style>
+<!-- Section 3: Live Quiz Preview for Kaushal -->
+<section class="kaushal-quiz-preview">
+  <h2 class="quiz-heading">Try a Sample Quiz</h2>
+  <p class="quiz-subtext">Experience learning the fun way – no login needed.</p>
+  <div class="quiz-card" id="quizCard">
+    <div class="quiz-question">What is the capital of India?</div>
+    <div class="quiz-options" id="quizOptions">
+      <button class="quiz-option" data-correct="false">Mumbai</button>
+      <button class="quiz-option" data-correct="false">Kolkata</button>
+      <button class="quiz-option" data-correct="true">New Delhi</button>
+      <button class="quiz-option" data-correct="false">Chennai</button>
+    </div>
+    <button class="quiz-submit" id="quizSubmit" disabled>Submit</button>
+    <div class="quiz-feedback" id="quizFeedback"></div>
+  </div>
+  <button class="quiz-full-btn">Try Full Quiz</button>
+</section>
+
+<style>
+.kaushal-quiz-preview {
+  max-width: 430px;
+  margin: 56px auto 0 auto;
+  padding: 32px 12px 48px 12px;
+  background: #f0f9ff;
+  border-radius: 20px;
+  box-shadow: 0 4px 32px 0 rgba(80,80,80,0.07);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.quiz-heading {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #1e293b;
+  text-align: center;
+  margin-bottom: 10px;
+  letter-spacing: -1px;
+}
+.quiz-subtext {
+  font-size: 1.07rem;
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 34px;
+}
+.quiz-card {
+  width: 100%;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 18px 0 rgba(100,100,100,0.12);
+  padding: 26px 18px 24px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: stretch;
+  transition: box-shadow 0.2s;
+}
+.quiz-question {
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: #0ea5e9;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.quiz-option {
+  background: #f1f5f9;
+  color: #1e293b;
+  border: none;
+  border-radius: 8px;
+  padding: 13px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 10px 0 rgba(0,0,0,0.03);
+  cursor: pointer;
+  transition: background 0.16s, color 0.15s, transform 0.10s;
+  outline: none;
+  border: 2px solid transparent;
+  position: relative;
+}
+.quiz-option.selected {
+  background: #a5b4fc;
+  color: #1e293b;
+  border-color: #6366f1;
+  transform: scale(1.03);
+}
+.quiz-option.correct {
+  background: #bbf7d0;
+  color: #166534;
+  border-color: #22c55e;
+  animation: correctAnim 0.35s;
+}
+.quiz-option.wrong {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #ef4444;
+  animation: wrongAnim 0.35s;
+}
+@keyframes correctAnim {
+  0% { box-shadow: 0 0 0 0 #22c55e33; }
+  100% { box-shadow: 0 0 0 10px #22c55e11; }
+}
+@keyframes wrongAnim {
+  0% { box-shadow: 0 0 0 0 #ef444433; }
+  100% { box-shadow: 0 0 0 10px #ef444411; }
+}
+.quiz-submit {
+  margin-top: 2px;
+  background: linear-gradient(90deg,#6366f1,#06b6d4);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 13px 0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 10px 0 rgba(80,80,170,0.09);
+  transition: background 0.16s, opacity 0.16s;
+  opacity: 0.93;
+}
+.quiz-submit:disabled {
+  background: #e5e7eb;
+  color: #a1a1aa;
+  cursor: not-allowed;
+  opacity: 1;
+}
+.quiz-feedback {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.02rem;
+  margin-top: 6px;
+  min-height: 22px;
+}
+.quiz-full-btn {
+  margin-top: 30px;
+  background: linear-gradient(90deg,#f59e0b 70%,#fbbf24);
+  color: #fff;
+  font-size: 1.09rem;
+  font-weight: 700;
+  padding: 14px 38px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px 0 rgba(245,158,11,0.09);
+  transition: background 0.13s, transform 0.11s;
+}
+.quiz-full-btn:hover {
+  background: linear-gradient(90deg,#fbbf24,#f59e0b);
+  transform: scale(1.03);
+}
+@media (max-width: 500px) {
+  .kaushal-quiz-preview {
+    padding: 18px 1vw 28px 1vw;
+    max-width: 99vw;
+    border-radius: 12px;
+  }
+  .quiz-card {
+    padding: 16px 4vw 16px 4vw;
+    border-radius: 10px;
+  }
+  .quiz-full-btn {
+    padding: 12px 1vw;
+    width: 100%;
+    border-radius: 8px;
+  }
+}
+</style>
+
+<script>
+const options = document.querySelectorAll('.quiz-option');
+const submitBtn = document.getElementById('quizSubmit');
+const feedback = document.getElementById('quizFeedback');
+let selectedOption = null;
+let answered = false;
+
+options.forEach(opt => {
+  opt.addEventListener('click', () => {
+    if (answered) return;
+    options.forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+    selectedOption = opt;
+    submitBtn.disabled = false;
+    feedback.textContent = '';
+  });
+});
+
+submitBtn.addEventListener('click', () => {
+  if (!selectedOption || answered) return;
+  answered = true;
+  const isCorrect = selectedOption.getAttribute('data-correct') === "true";
+  if (isCorrect) {
+    selectedOption.classList.add('correct');
+    feedback.textContent = "✔️ Correct! New Delhi is the capital.";
+    feedback.style.color = "#22c55e";
+  } else {
+    selectedOption.classList.add('wrong');
+    feedback.textContent = "❌ Oops! That's not correct.";
+    feedback.style.color = "#ef4444";
+    // highlight correct answer
+    options.forEach(o => {
+      if (o.getAttribute('data-correct') === "true") {
+        o.classList.add('correct');
+      }
+    });
+  }
+  options.forEach(o => o.disabled = true);
+  submitBtn.disabled = true;
+  setTimeout(() => { // allow retry after 2.2s
+    options.forEach(o => {
+      o.classList.remove('selected', 'correct', 'wrong');
+      o.disabled = false;
+    });
+    selectedOption = null;
+    answered = false;
+    submitBtn.disabled = true;
+    feedback.textContent = '';
+  }, 2200);
+});
+</script>
 
   <!-- Popular Courses -->
   <div class="section">
@@ -419,11 +963,6 @@
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeSidebar();
     });
-    
-  document.getElementById('loginBtn').onclick = function() {
-    window.location.href = 'profile.html';
-  };
-
   </script>
 </body>
 </html>
