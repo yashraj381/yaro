@@ -1,968 +1,680 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>kaushal- Learn Smarter</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kaushal - Study Resources</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="kaushal.png">
   <style>
     :root {
-      --primary: #f59e0b;
-      --secondary: #6366f1;
-      --accent: #06b6d4;
-      --text-main: #222;
-      --text-light: #fff;
-      --surface: #fff;
-      --radius: 8px;
-      --shadow: 0 2px 5px rgba(0,0,0,0.10);
-      --shadow-lg: 0 6px 32px 0 rgba(80, 80, 80, 0.09);
+      --blue: #2563eb;
+      --purple: #a68cf7;
+      --background: #fff;
+      --shadow: 0 4px 16px rgba(37,99,235,0.08), 0 1.5px 8px rgba(0,0,0,0.06);
+      --transition: 0.3s cubic-bezier(.4,0,.2,1);
     }
-    * {
+    html, body {
+      height: 100%;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Poppins', sans-serif;
+      background: var(--background);
+      color: #222;
     }
     body {
-      background: var(--surface);
-      color: var(--text-main);
       min-height: 100vh;
-    }
-    .header {
-      width: 100%;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+    }
+
+    /* Top Nav */
+    .navbar {
+      display: flex;
       align-items: center;
-      padding: 16px;
-      background: var(--surface);
+      justify-content: space-between;
+      padding: 0.7rem 1.2rem;
+      background: var(--background);
       box-shadow: var(--shadow);
       position: sticky;
       top: 0;
-      left: 0;
-      z-index: 2000;
+      z-index: 20;
     }
-    .menu-icon {
-      width: 28px;
-      height: 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      cursor: pointer;
-      z-index: 2100;
-    }
-    .menu-icon div {
-      height: 4px;
-      background: #333;
-      border-radius: 2px;
-      transition: background 0.2s;
-    }
-    .logo {
-      font-size: 28px;
-      font-weight: bold;
-      color: var(--primary);
+    .nav-left, .nav-right {
       display: flex;
       align-items: center;
-      gap: 8px;
     }
-    .logo img {
-      height: 36px;
-      vertical-align: middle;
-    }
-    .sign-in {
-      border: 1px solid #333;
-      padding: 8px 16px;
-      border-radius: 4px;
-      font-size: 16px;
-      cursor: pointer;
-      background: transparent;
-      transition: background 0.2s, color 0.2s;
-    }
-    .sign-in:hover {
-      background: var(--primary);
-      color: var(--text-light);
-      border-color: var(--primary);
-    }
-    .powered {
-      text-align: center;
-      font-size: 12px;
-      color: #777;
-      margin-top: 4px;
-    }
-    .banner {
-      background: var(--primary);
-      color: var(--text-light);
-      text-align: center;
-      padding: 24px 12px;
-    }
-    .banner h2 {
-      font-size: 20px;
-      font-weight: bold;
-    }
-    .banner p {
-      margin: 10px 0;
-      font-size: 16px;
-    }
-    .banner button {
-      background: #222;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 600;
-      transition: background 0.2s, box-shadow 0.2s;
-    }
-    .banner button:hover {
-      background: var(--secondary);
-    }
-    .section {
-      padding: 20px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .section h3 {
-      font-size: 18px;
-      color: var(--primary);
-      margin-bottom: 10px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-    .card {
-      padding: 24px;
-      border-radius: 8px;
-      text-align: center;
-      font-weight: bold;
-      box-shadow: var(--shadow);
-    }
-    .jee {
-      background: #ede9fe;
-      color: #6b21a8;
-    }
-    .neet {
-      background: #fef9c3;
-      color: #92400e;
-    }
-    .explore h3 {
-      color: #222;
-    }
-    .tags {
-      margin-top: 10px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .tag {
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-weight: bold;
-      font-size: 14px;
-      box-shadow: var(--shadow);
-    }
-    .tag.jee {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-    .tag.neet {
-      background: #dcfce7;
-      color: #15803d;
-    }
-    .tag.foundation {
-      background: #ffedd5;
-      color: #c2410c;
-    }
-    /* Sidebar styles */
-    .sidebar-overlay {
-      position: fixed;
-      top: 0; right: 0; bottom: 0; left: 0;
-      background: rgba(0,0,0,0.3);
-      z-index: 1999;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-    }
-    .sidebar-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .sidebar {
-      position: fixed;
-      top: 0;
-      right: -300px;
-      height: 100vh;
-      width: 280px;
-      background: #fff;
-      box-shadow: -2px 0 8px rgba(0,0,0,0.13);
-      z-index: 2100;
-      display: flex;
-      flex-direction: column;
-      padding: 32px 20px 20px 20px;
-      transition: right 0.3s;
-    }
-    .sidebar.active {
-      right: 0;
-    }
-    .sidebar h2 {
-      font-size: 22px;
-      color: var(--primary);
-      margin-bottom: 24px;
-    }
-    .sidebar button {
-      width: 100%;
-      padding: 12px 0;
-      margin-bottom: 16px;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.18s;
-    }
-    .sidebar .ncert-btn {
-      background: var(--primary);
-      color: #fff;
-      margin-bottom: 12px;
-    }
-    .sidebar .yaro-btn {
-      background: #222;
-      color: #fff;
-    }
-    .sidebar .close-btn {
+    .hamburger {
       background: none;
       border: none;
-      font-size: 28px;
-      position: absolute;
-      top: 8px;
-      right: 16px;
+      font-size: 2rem;
+      color: #222;
       cursor: pointer;
-      color: #888;
+      padding: 0.1rem 0.5rem 0.1rem 0;
+      outline: none;
     }
-    /* Hero Section */
-    .hero-section {
+    .navbar-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #eaf0fa;
+      margin: 0 auto;
+      display: block;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+    }
+    .nav-login-btn {
+      padding: 0.45em 1.2em;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.12);
+      transition: background var(--transition);
+    }
+    .nav-login-btn:hover {
+      background: #1d4fd7;
+    }
+
+    /* Main Content */
+    main {
+      flex: 1;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 48px 24px 32px 24px;
-      background: linear-gradient(100deg, #f0f9ff 0%, #fff7ed 100%);
-      border-radius: 20px;
-      box-shadow: var(--shadow-lg);
-      gap: 40px;
-      margin: 32px auto 0 auto;
-      max-width: 1100px;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      padding: 2.2rem 1.2rem 3.5rem 1.2rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .main-heading {
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 0.4em;
+      letter-spacing: -0.5px;
+    }
+    .main-subheading {
+      font-size: 1.07rem;
+      color: #555;
+      font-weight: 500;
+      margin-bottom: 2.2em;
+      line-height: 1.5;
+    }
+
+    /* Notes Card */
+    .notes-card {
+      background: #f8fafc;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: flex-start;
+      padding: 1.32em 1.2em;
+      margin-bottom: 1.5em;
+      gap: 1.1em;
+      transition: box-shadow var(--transition), transform var(--transition);
+      cursor: pointer;
       position: relative;
       overflow: hidden;
     }
-    .hero-content {
-      flex: 1 1 320px;
-      z-index: 2;
+    .notes-card:hover {
+      box-shadow: 0 6px 24px rgba(37,99,235,0.13);
+      transform: translateY(-2px) scale(1.018);
     }
-    .hero-content h1 {
-      font-size: 2.3rem;
-      font-weight: 800;
-      color: #1e293b;
-      margin-bottom: 16px;
-      line-height: 1.2;
-      letter-spacing: -1px;
+    .notes-info {
+      flex: 1;
+      min-width: 0;
     }
-    .hero-content p {
-      color: #334155;
-      font-size: 1.1rem;
-      margin-bottom: 28px;
-      max-width: 400px;
+    .notes-title {
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: var(--purple);
+      margin-bottom: 0.2em;
+      letter-spacing: -0.2px;
     }
-    .hero-buttons {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
+    .notes-desc {
+      font-size: 0.98rem;
+      color: #333;
+      margin-bottom: 0.7em;
+      line-height: 1.4;
     }
-    .cta-btn {
-      padding: 12px 28px;
-      font-size: 1rem;
-      font-weight: 600;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      transition: box-shadow 0.19s, background 0.19s;
-      box-shadow: 0 4px 20px 0 rgba(100,100,100,0.11);
+    .notes-arrow {
+      display: inline-flex;
+      align-items: center;
+      color: var(--blue);
+      font-size: 1.65rem;
+      font-weight: 700;
+      margin-top: 0.15em;
+      transition: transform 0.18s;
     }
-    .cta-btn.primary {
-      background: linear-gradient(90deg, var(--secondary), var(--accent));
-      color: #fff;
+    .notes-card:hover .notes-arrow {
+      transform: translateX(8px);
     }
-    .cta-btn.secondary {
-      background: #fff;
-      color: var(--secondary);
-      border: 2px solid var(--secondary);
-    }
-    .cta-btn:hover, .cta-btn:focus {
-      box-shadow: 0 6px 32px 0 rgba(80, 80, 80, 0.18);
-      opacity: 0.94;
-    }
-    .hero-illustration {
-      flex: 1 1 280px;
+    .notes-svg {
+      min-width: 60px;
+      width: 60px;
+      height: 60px;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 200px;
     }
-    /* Responsive Design */
-    @media (max-width: 900px) {
-      .hero-section {
-        flex-direction: column-reverse;
-        gap: 32px;
-        padding: 32px 8vw 24px 8vw;
-        border-radius: 0 0 20px 20px;
+
+    /* Floating Support Button */
+    .support-btn {
+      position: fixed;
+      bottom: 2.1em;
+      right: 1.3em;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      box-shadow: 0 4px 16px rgba(37,99,235,0.20);
+      cursor: pointer;
+      z-index: 22;
+      transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+      outline: none;
+    }
+    .support-btn:active {
+      background: #1d4fd7;
+      transform: scale(0.97);
+    }
+
+    /* Slide-out Menu */
+    .slide-menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(34,34,34,0.10);
+      z-index: 25;
+      display: none;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .slide-menu-overlay.active {
+      display: block;
+      opacity: 1;
+    }
+    .slide-menu {
+      position: fixed;
+      top: 0;
+      right: -320px;
+      width: 80vw;
+      max-width: 320px;
+      height: 100vh;
+      background: #fff;
+      box-shadow: -6px 0 28px rgba(37,99,235,0.13);
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      padding: 1.7em 1.2em 1.4em 1.2em;
+      transition: right var(--transition);
+    }
+    .slide-menu.active {
+      right: 0;
+    }
+    .slide-menu-header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 1.4em;
+    }
+    .menu-close {
+      background: none;
+      border: none;
+      font-size: 2.3rem;
+      color: #222;
+      cursor: pointer;
+      padding: 0.1rem 0.5rem 0.1rem 0;
+    }
+    .slide-menu-btn {
+      background: var(--blue);
+      color: #fff;
+      font-weight: 600;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 16px;
+      margin-bottom: 1.3em;
+      padding: 0.9em 1.1em;
+      box-shadow: 0 3px 10px rgba(37,99,235,0.08);
+      text-align: left;
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.7em;
+    }
+    .slide-menu-btn:last-child {
+      margin-bottom: 0.8em;
+    }
+    .slide-menu-btn:active {
+      background: #1d4fd7;
+      transform: scale(0.97);
+    }
+    .slide-menu-login {
+      background: var(--purple);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.11rem;
+      border: none;
+      border-radius: 18px;
+      margin-top: auto;
+      margin-bottom: 0.5em;
+      padding: 0.9em 1.1em;
+      box-shadow: 0 2px 8px rgba(166,140,247,0.13);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .slide-menu-login:active {
+      background: #805add;
+    }
+
+    /* Login/Register Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(34,34,34,0.15);
+      z-index: 40;
+      display: none;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .modal-overlay.active {
+      display: block;
+      opacity: 1;
+    }
+    .modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 95vw;
+      max-width: 350px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 2.2em 1.4em 1.5em 1.4em;
+      transform: translate(-50%, -50%) scale(0.97);
+      z-index: 45;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    .modal.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .modal-close {
+      position: absolute;
+      top: 1.1em;
+      right: 1em;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: #222;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .modal-title {
+      font-size: 1.38rem;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 0.25em;
+      margin-top: 0.4em;
+      letter-spacing: -0.5px;
+      text-align: center;
+    }
+    .modal-subheading {
+      font-size: 1.02rem;
+      color: #444;
+      margin-bottom: 1.1em;
+      text-align: center;
+      font-weight: 500;
+    }
+    .modal-profile {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: #eee;
+      margin-bottom: 1.1em;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.11);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-fields {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85em;
+      margin-bottom: 1.15em;
+    }
+    .modal-fields input {
+      font-family: inherit;
+      padding: 0.82em 1em;
+      border-radius: 13px;
+      border: 1.5px solid #e3e3e3;
+      font-size: 1.03rem;
+      outline: none;
+      transition: border-color 0.19s;
+      background: #f7f7fc;
+    }
+    .modal-fields input:focus {
+      border-color: var(--blue);
+    }
+    .login-btn {
+      width: 100%;
+      padding: 0.85em 0;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 15px;
+      font-size: 1.08rem;
+      font-weight: 700;
+      letter-spacing: 0.1px;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.10);
+      cursor: pointer;
+      margin-bottom: 0.4em;
+      transition: background var(--transition);
+    }
+    .login-btn:active {
+      background: #1d4fd7;
+    }
+    .modal-error {
+      color: #e03c46;
+      font-size: 0.97rem;
+      margin-top: 0.22em;
+      min-height: 1.1em;
+      text-align: center;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      display: none;
+    }
+    .modal-error.active {
+      display: block;
+    }
+
+    /* Responsive */
+    @media (min-width: 600px) {
+      .main-heading {
+        font-size: 2.45rem;
       }
-      .hero-illustration {
-        margin-bottom: 0;
-        min-width: 180px;
-      }
-      .hero-content {
-        align-items: flex-start;
-        text-align: left;
-      }
-      .grid {
-        grid-template-columns: 1fr;
+      .notes-svg {
+        width: 75px;
+        height: 75px;
+        min-width: 75px;
       }
     }
-    @media (max-width: 600px) {
-      .header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-        padding: 12px;
+    @media (min-width: 900px) {
+      main {
+        max-width: 500px;
+        padding: 2.7rem 0 3.5rem 0;
       }
-      .hero-section {
-        padding: 28px 3vw 18px 3vw;
-        gap: 18px;
+      .slide-menu {
+        width: 340px;
+        max-width: 340px;
       }
-      .hero-content h1 {
-        font-size: 1.35rem;
-      }
-      .hero-content p {
-        font-size: 0.99rem;
-      }
-      .hero-illustration svg {
-        width: 130px;
-        height: 110px;
-      }
+    }
+    @media (max-width: 400px) {
+      .notes-svg { width: 45px; height: 45px; min-width: 45px;}
+      .navbar-logo { width: 36px; height: 36px;}
+      .modal { padding: 1.3em 0.6em 1em 0.6em; }
+      .slide-menu { padding: 1em 0.5em 0.8em 0.5em;}
     }
   </style>
 </head>
 <body>
-  <!-- Header always at the top -->
-  <div class="header">
-    <div style="display: flex; align-items: center; gap: 12px;">
-      <div class="menu-icon" id="menuIcon" tabindex="0" aria-label="Open menu">
-        <div></div>
-        <div></div>
-        <div></div>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="nav-left">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Menu" title="Open Menu">
+        &#9776;
+      </button>
+    </div>
+    <img src="kaushal.png" alt="Kaushal Logo" class="navbar-logo" />
+    <div class="nav-right">
+      <button class="nav-login-btn" id="loginBtn">Login/Register</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <h1 class="main-heading">Study Resources</h1>
+    <div class="main-subheading">
+      A diverse array of learning materials to enhance your educational journey.
+    </div>
+    <div class="notes-card" tabindex="0" id="notesCard" aria-label="Notes Card">
+      <div class="notes-info">
+        <div class="notes-title">Notes</div>
+        <div class="notes-desc">
+          Friendly, concise notes designed to make your learning simple and enjoyable. Get your key concepts, summaries, and quick revisions—all in one place!
+        </div>
+        <span class="notes-arrow">&rarr;</span>
       </div>
-      <div class="logo">
-        <img src="kaushal.png" alt="kaushal logo">
-        kaushal
+      <div class="notes-svg">
+        <!-- Book SVG illustration -->
+        <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+          <rect x="8" y="13" width="44" height="34" rx="7" fill="#a68cf7" />
+          <rect x="12" y="17" width="36" height="26" rx="4.5" fill="#fff"/>
+          <rect x="16" y="21" width="28" height="18" rx="2.5" fill="#e5e9fa"/>
+          <rect x="22" y="25" width="16" height="10" rx="1.5" fill="#c5b5f8"/>
+        </svg>
       </div>
     </div>
-    <button class="sign-in" onclick="window.location.href='profile.html'">Sign In</button>
-  </div>
+  </main>
 
-  <!-- Sidebar overlay -->
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
-  <!-- Sidebar -->
-  <nav class="sidebar" id="sidebar">
-    <button class="close-btn" id="closeSidebar" aria-label="Close menu">&times;</button>
-    <h2>Menu</h2>
-    <button class="ncert-btn" onclick="window.location.href='ncert.html'">NCERT Solution</button>
-    <button class="yaro-btn" onclick="window.location.href='yaro.html'">Talk to Yaro</button>
+  <!-- Floating Support Button -->
+  <button class="support-btn" id="supportBtn" title="Call Support" aria-label="Call Support">
+    <!-- Phone SVG -->
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="12" fill="none"/>
+      <path d="M6.85 4.9c.3-.3.75-.33 1.08-.08l2.2 1.68c.34.26.43.76.18 1.12l-1.1 1.54a1.6 1.6 0 0 0 .17 1.97l3.61 3.6a1.6 1.6 0 0 0 1.97.17l1.54-1.1c.36-.25.86-.16 1.12.18l1.68 2.2c.25.33.22.78-.08 1.08l-1.06 1.06c-.71.7-2.44 2.15-6.88-2.3-4.44-4.44-3-6.17-2.3-6.88l1.06-1.06z" fill="#fff"/>
+      <path d="M6.85 4.9c.3-.3.75-.33 1.08-.08l2.2 1.68c.34.26.43.76.18 1.12l-1.1 1.54a1.6 1.6 0 0 0 .17 1.97l3.61 3.6a1.6 1.6 0 0 0 1.97.17l1.54-1.1c.36-.25.86-.16 1.12.18l1.68 2.2c.25.33.22.78-.08 1.08l-1.06 1.06c-.71.7-2.44 2.15-6.88-2.3-4.44-4.44-3-6.17-2.3-6.88l1.06-1.06z" fill="none" stroke="#fff" stroke-width="1"/>
+    </svg>
+  </button>
+
+  <!-- Slide-out Menu -->
+  <div class="slide-menu-overlay" id="slideMenuOverlay"></div>
+  <nav class="slide-menu" id="slideMenu" aria-label="Sidebar Menu">
+    <div class="slide-menu-header">
+      <button class="menu-close" id="menuCloseBtn" aria-label="Close Menu">&times;</button>
+    </div>
+    <button class="slide-menu-btn" onclick="location.href='yaro.html'">
+      <span>Talk to Yaro</span>
+      <svg width="19" height="19" viewBox="0 0 16 16" fill="none"><path d="M7 3l5 5-5 5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="slide-menu-btn" onclick="location.href='ncert.html'">
+      <span>NCERT Solutions</span>
+      <svg width="19" height="19" viewBox="0 0 16 16" fill="none"><path d="M7 3l5 5-5 5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="slide-menu-btn" onclick="location.href='otheractivities.html'">
+      <span>Other Activities</span>
+      <svg width="19" height="19" viewBox="0 0 16 16" fill="none"><path d="M7 3l5 5-5 5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="slide-menu-login" id="slideMenuLoginBtn">Login/Register</button>
   </nav>
 
-  <div class="powered">Powered by Yashraj Pawar</div>
-
-  <!-- Banner -->
-  <div class="banner">
-    <h2>Get the Early Admission Advantage</h2>
-    <p>FLAT ₹20,000 OFF on 2-Year JEE/NEET Course</p>
-    <button>Enroll Now</button>
-  </div>
-
-  <!-- Hero Banner Section for Kaushal -->
-  <section class="hero-section">
-    <div class="hero-content">
-      <h1>Smart Learning, Real Progress.</h1>
-      <p>Interactive quizzes, performance tracking, and fun challenges for students of all ages.</p>
-      <div class="hero-buttons">
-        <button class="cta-btn primary" 
-        <!-- Start Learning Button with Modern Transition Effect -->
-<style>
-.kaushal-btn-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 48px 0;
-}
-.kaushal-btn {
-  position: relative;
-  padding: 16px 38px;
-  background: linear-gradient(90deg, #6366f1, #06b6d4 90%);
-  color: #fff;
-  font-size: 1.2rem;
-  font-weight: 700;
-  border: none;
-  border-radius: 40px;
-  box-shadow: 0 8px 32px rgba(80,80,80,0.13);
-  cursor: pointer;
-  outline: none;
-  transition: 
-    box-shadow 0.25s,
-    transform 0.15s,
-    background 0.22s;
-  overflow: hidden;
-  min-width: 180px;
-}
-.kaushal-btn:active {
-  animation: kaushal-bounce 0.5s;
-}
-.kaushal-btn.glow {
-  box-shadow: 0 0 0 5px #a5b4fc66, 0 8px 32px rgba(80,80,80,0.13);
-  background: linear-gradient(90deg, #06b6d4, #6366f1 90%);
-  transform: scale(1.05);
-}
-@keyframes kaushal-bounce {
-  0%   { transform: scale(1);}
-  20%  { transform: scale(1.08);}
-  55%  { transform: scale(0.97);}
-  80%  { transform: scale(1.03);}
-  100% { transform: scale(1);}
-}
-
-/* Loading Overlay */
-.kaushal-loading-overlay {
-  position: absolute;
-  left: 0; top: 0;
-  right: 0; bottom: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(250,250,253,0.99);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 40px;
-  z-index: 2;
-  animation: kaushal-overlay-fadein 0.18s;
-}
-@keyframes kaushal-overlay-fadein {
-  from { opacity: 0;}
-  to   { opacity: 1;}
-}
-/* Spinner */
-.kaushal-spinner {
-  width: 34px;
-  height: 34px;
-  border: 4px solid #bae6fd;
-  border-top: 4px solid #6366f1;
-  border-radius: 50%;
-  animation: kaushal-spin 0.8s linear infinite;
-  margin-bottom: 16px;
-}
-@keyframes kaushal-spin {
-  to { transform: rotate(360deg);}
-}
-.kaushal-loading-text {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #6366f1;
-  text-align: center;
-  letter-spacing: 0.01em;
-}
-
-/* Responsive */
-@media (max-width: 500px) {
-  .kaushal-btn {
-    font-size: 1rem;
-    padding: 13px 18px;
-    border-radius: 30px;
-    min-width: 130px;
-  }
-  .kaushal-loading-overlay {
-    font-size: 0.95rem;
-    border-radius: 30px;
-  }
-}
-</style>
-
-<div class="kaushal-btn-wrapper">
-  <button class="kaushal-btn" id="startLearningBtn">
-    Start Learning
-    <span class="kaushal-loading-overlay" id="kaushalLoadingOverlay" style="display:none;">
-      <div class="kaushal-spinner"></div>
-      <div class="kaushal-loading-text">Preparing your learning journey...</div>
-    </span>
-  </button>
-</div>
-<script>
-const btn = document.getElementById('startLearningBtn');
-const overlay = document.getElementById('kaushalLoadingOverlay');
-
-btn.addEventListener('click', function(e) {
-  // Add glow and bounce
-  btn.classList.add('glow');
-  btn.blur(); // remove focus (for mobile)
-  // Show loading overlay
-  overlay.style.display = 'flex';
-  // Prevent double-clicks
-  btn.disabled = true;
-
-  setTimeout(() => {
-    // Redirect after 2 seconds
-    window.location.href = 'dashboard.html';
-  }, 2000);
-});
-</script>
-
-
-        <button class="cta-btn secondary">Try a Free Quiz</button>
-      </div>
+  <!-- Login/Register Modal -->
+  <div class="modal-overlay" id="modalOverlay"></div>
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modalCloseBtn" aria-label="Close">&times;</button>
+    <div class="modal-title">Welcome to Kaushal!</div>
+    <div class="modal-subheading">Login / Register</div>
+    <div class="modal-profile">
+      <iframe src="image.html" width="62" height="62" style="border:none;" id="profileFrame"
+        onerror="this.style.display='none';document.getElementById('defaultAvatar').style.display='block';"></iframe>
+      <img src="https://ui-avatars.com/api/?name=User&background=a68cf7&color=fff&rounded=true&size=62"
+        alt="Default Avatar" id="defaultAvatar" style="display:none;width:62px;height:62px;border-radius:50%;">
     </div>
-    <div class="hero-illustration">
-      <!-- Sample SVG illustration (student + robot). Replace with animation if desired -->
-      <svg width="200" height="180" viewBox="0 0 200 180" fill="none">
-        <ellipse cx="100" cy="160" rx="80" ry="16" fill="#E0E7FF"/>
-        <circle cx="65" cy="90" r="40" fill="#A7F3D0"/>
-        <rect x="120" y="70" width="48" height="48" rx="15" fill="#FDE68A"/>
-        <circle cx="144" cy="94" r="10" fill="#F59E42"/>
-        <rect x="60" y="120" width="56" height="10" rx="5" fill="#6366F1"/>
-        <circle cx="90" cy="80" r="10" fill="#fff"/>
-        <circle cx="110" cy="80" r="10" fill="#fff"/>
-        <ellipse cx="90" cy="84" rx="2" ry="3" fill="#6366F1"/>
-        <ellipse cx="110" cy="84" rx="2" ry="3" fill="#6366F1"/>
-      </svg>
-    </div>
-  </section>
-  
-  <!-- Modern Benefits Section for Kaushal -->
-<section class="kaushal-benefits">
-  <h2 class="benefits-heading">Why Students &amp; Parents Love Kaushal</h2>
-  <div class="benefits-grid">
-    <!-- Card 1: Safe & Distraction-Free -->
-    <div class="benefit-card">
-      <div class="icon-bg" style="background: linear-gradient(135deg,#6366f1 60%,#a7f3d0 100%);">
-        <!-- Shield Icon (Safe) -->
-        <svg width="38" height="38" fill="none" viewBox="0 0 38 38">
-          <rect width="38" height="38" rx="12" fill="none"/>
-          <path d="M19 32s10-4.5 10-12.5V8.43L19 5 9 8.43v11.07C9 27.5 19 32 19 32z" fill="#fff" stroke="#6366f1" stroke-width="2"/>
-          <path d="M15.5 19.5l2.5 2.5 4.5-4.5" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <h3>Safe &amp; Distraction-Free</h3>
-      <p>No ads, child-safe, and focused learning.</p>
-    </div>
-    <!-- Card 2: Track Progress & Performance -->
-    <div class="benefit-card">
-      <div class="icon-bg" style="background: linear-gradient(135deg,#fbbf24 60%,#fde68a 100%);">
-        <!-- Analytics Icon -->
-        <svg width="38" height="38" fill="none" viewBox="0 0 38 38">
-          <rect width="38" height="38" rx="12" fill="none"/>
-          <rect x="11" y="21" width="4" height="7" rx="2" fill="#fff" stroke="#f59e0b" stroke-width="2"/>
-          <rect x="17" y="15" width="4" height="13" rx="2" fill="#fff" stroke="#f59e0b" stroke-width="2"/>
-          <rect x="23" y="18" width="4" height="10" rx="2" fill="#fff" stroke="#f59e0b" stroke-width="2"/>
-        </svg>
-      </div>
-      <h3>Track Progress &amp; Performance</h3>
-      <p>Weekly reports and score dashboards for students and parents.</p>
-    </div>
-    <!-- Card 3: Fun, Gamified Learning -->
-    <div class="benefit-card">
-      <div class="icon-bg" style="background: linear-gradient(135deg,#f472b6 60%,#f9a8d4 100%);">
-        <!-- Trophy/Badge Icon -->
-        <svg width="38" height="38" fill="none" viewBox="0 0 38 38">
-          <rect width="38" height="38" rx="12" fill="none"/>
-          <circle cx="19" cy="15" r="7" fill="#fff" stroke="#e11d48" stroke-width="2"/>
-          <path d="M13 28l3-4h6l3 4-6 2-6-2z" fill="#fff" stroke="#e11d48" stroke-width="2"/>
-          <circle cx="19" cy="15" r="2" fill="#e11d48"/>
-        </svg>
-      </div>
-      <h3>Fun, Gamified Learning</h3>
-      <p>Earn points, badges, and certificates while learning.</p>
-    </div>
-    <!-- Card 4: AI Assistant Help -->
-    <div class="benefit-card">
-      <div class="icon-bg" style="background: linear-gradient(135deg,#06b6d4 60%,#a5b4fc 100%);">
-        <!-- AI/Chatbot Icon -->
-        <svg width="38" height="38" fill="none" viewBox="0 0 38 38">
-          <rect width="38" height="38" rx="12" fill="none"/>
-          <ellipse cx="19" cy="18" rx="8" ry="8" fill="#fff" stroke="#0ea5e9" stroke-width="2"/>
-          <ellipse cx="16" cy="17" rx="1" ry="2" fill="#38bdf8"/>
-          <ellipse cx="22" cy="17" rx="1" ry="2" fill="#38bdf8"/>
-          <rect x="15" y="22" width="8" height="2" rx="1" fill="#dbeafe"/>
-        </svg>
-      </div>
-      <h3>AI Assistant Help</h3>
-      <p>Instant answers and study help with our smart assistant.</p>
-    </div>
-  </div>
-</section>
-
-<style>
-.kaushal-benefits {
-  max-width: 1100px;
-  margin: 56px auto 0 auto;
-  padding: 32px 16px 48px 16px;
-  background: #f8fafc;
-  border-radius: 20px;
-  box-shadow: 0 4px 32px 0 rgba(80,80,80,0.07);
-}
-.benefits-heading {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 36px;
-  letter-spacing: -1px;
-}
-.benefits-grid {
-  display: flex;
-  gap: 24px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.benefit-card {
-  flex: 1 1 210px;
-  max-width: 250px;
-  min-width: 220px;
-  background: #fff;
-  border-radius: 18px;
-  padding: 32px 22px 28px 22px;
-  box-shadow: 0 4px 18px 0 rgba(100,100,100,0.09);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.15s, box-shadow 0.18s;
-  cursor: pointer;
-}
-.benefit-card:hover {
-  box-shadow: 0 8px 32px 0 rgba(80,80,80,0.15);
-  transform: translateY(-4px) scale(1.025);
-}
-.icon-bg {
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 14px;
-  margin-bottom: 18px;
-  box-shadow: 0 2px 8px 0 rgba(80,80,80,0.09);
-}
-.benefit-card h3 {
-  margin: 0 0 12px 0;
-  font-size: 1.12rem;
-  color: #111827;
-  font-weight: 700;
-  text-align: center;
-}
-.benefit-card p {
-  color: #374151;
-  font-size: 1rem;
-  text-align: center;
-}
-@media (max-width: 900px) {
-  .benefits-grid {
-    gap: 16px;
-  }
-  .benefit-card {
-    min-width: 180px;
-    padding: 26px 14px 22px 14px;
-  }
-}
-@media (max-width: 600px) {
-  .benefits-heading {
-    font-size: 1.25rem;
-    margin-bottom: 24px;
-  }
-  .benefits-grid {
-    flex-direction: column;
-    gap: 18px;
-    align-items: stretch;
-  }
-  .benefit-card {
-    max-width: unset;
-    min-width: 0;
-    width: 100%;
-    padding: 24px 10px 16px 10px;
-  }
-}
-</style>
-<!-- Section 3: Live Quiz Preview for Kaushal -->
-<section class="kaushal-quiz-preview">
-  <h2 class="quiz-heading">Try a Sample Quiz</h2>
-  <p class="quiz-subtext">Experience learning the fun way – no login needed.</p>
-  <div class="quiz-card" id="quizCard">
-    <div class="quiz-question">What is the capital of India?</div>
-    <div class="quiz-options" id="quizOptions">
-      <button class="quiz-option" data-correct="false">Mumbai</button>
-      <button class="quiz-option" data-correct="false">Kolkata</button>
-      <button class="quiz-option" data-correct="true">New Delhi</button>
-      <button class="quiz-option" data-correct="false">Chennai</button>
-    </div>
-    <button class="quiz-submit" id="quizSubmit" disabled>Submit</button>
-    <div class="quiz-feedback" id="quizFeedback"></div>
-  </div>
-  <button class="quiz-full-btn">Try Full Quiz</button>
-</section>
-
-<style>
-.kaushal-quiz-preview {
-  max-width: 430px;
-  margin: 56px auto 0 auto;
-  padding: 32px 12px 48px 12px;
-  background: #f0f9ff;
-  border-radius: 20px;
-  box-shadow: 0 4px 32px 0 rgba(80,80,80,0.07);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.quiz-heading {
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: #1e293b;
-  text-align: center;
-  margin-bottom: 10px;
-  letter-spacing: -1px;
-}
-.quiz-subtext {
-  font-size: 1.07rem;
-  text-align: center;
-  color: #64748b;
-  margin-bottom: 34px;
-}
-.quiz-card {
-  width: 100%;
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 4px 18px 0 rgba(100,100,100,0.12);
-  padding: 26px 18px 24px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  align-items: stretch;
-  transition: box-shadow 0.2s;
-}
-.quiz-question {
-  font-size: 1.18rem;
-  font-weight: 700;
-  color: #0ea5e9;
-  margin-bottom: 8px;
-  text-align: center;
-}
-.quiz-options {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.quiz-option {
-  background: #f1f5f9;
-  color: #1e293b;
-  border: none;
-  border-radius: 8px;
-  padding: 13px 0;
-  font-size: 1rem;
-  font-weight: 600;
-  box-shadow: 0 2px 10px 0 rgba(0,0,0,0.03);
-  cursor: pointer;
-  transition: background 0.16s, color 0.15s, transform 0.10s;
-  outline: none;
-  border: 2px solid transparent;
-  position: relative;
-}
-.quiz-option.selected {
-  background: #a5b4fc;
-  color: #1e293b;
-  border-color: #6366f1;
-  transform: scale(1.03);
-}
-.quiz-option.correct {
-  background: #bbf7d0;
-  color: #166534;
-  border-color: #22c55e;
-  animation: correctAnim 0.35s;
-}
-.quiz-option.wrong {
-  background: #fee2e2;
-  color: #991b1b;
-  border-color: #ef4444;
-  animation: wrongAnim 0.35s;
-}
-@keyframes correctAnim {
-  0% { box-shadow: 0 0 0 0 #22c55e33; }
-  100% { box-shadow: 0 0 0 10px #22c55e11; }
-}
-@keyframes wrongAnim {
-  0% { box-shadow: 0 0 0 0 #ef444433; }
-  100% { box-shadow: 0 0 0 10px #ef444411; }
-}
-.quiz-submit {
-  margin-top: 2px;
-  background: linear-gradient(90deg,#6366f1,#06b6d4);
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 13px 0;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 2px 10px 0 rgba(80,80,170,0.09);
-  transition: background 0.16s, opacity 0.16s;
-  opacity: 0.93;
-}
-.quiz-submit:disabled {
-  background: #e5e7eb;
-  color: #a1a1aa;
-  cursor: not-allowed;
-  opacity: 1;
-}
-.quiz-feedback {
-  text-align: center;
-  font-weight: 700;
-  font-size: 1.02rem;
-  margin-top: 6px;
-  min-height: 22px;
-}
-.quiz-full-btn {
-  margin-top: 30px;
-  background: linear-gradient(90deg,#f59e0b 70%,#fbbf24);
-  color: #fff;
-  font-size: 1.09rem;
-  font-weight: 700;
-  padding: 14px 38px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  box-shadow: 0 4px 20px 0 rgba(245,158,11,0.09);
-  transition: background 0.13s, transform 0.11s;
-}
-.quiz-full-btn:hover {
-  background: linear-gradient(90deg,#fbbf24,#f59e0b);
-  transform: scale(1.03);
-}
-@media (max-width: 500px) {
-  .kaushal-quiz-preview {
-    padding: 18px 1vw 28px 1vw;
-    max-width: 99vw;
-    border-radius: 12px;
-  }
-  .quiz-card {
-    padding: 16px 4vw 16px 4vw;
-    border-radius: 10px;
-  }
-  .quiz-full-btn {
-    padding: 12px 1vw;
-    width: 100%;
-    border-radius: 8px;
-  }
-}
-</style>
-
-<script>
-const options = document.querySelectorAll('.quiz-option');
-const submitBtn = document.getElementById('quizSubmit');
-const feedback = document.getElementById('quizFeedback');
-let selectedOption = null;
-let answered = false;
-
-options.forEach(opt => {
-  opt.addEventListener('click', () => {
-    if (answered) return;
-    options.forEach(o => o.classList.remove('selected'));
-    opt.classList.add('selected');
-    selectedOption = opt;
-    submitBtn.disabled = false;
-    feedback.textContent = '';
-  });
-});
-
-submitBtn.addEventListener('click', () => {
-  if (!selectedOption || answered) return;
-  answered = true;
-  const isCorrect = selectedOption.getAttribute('data-correct') === "true";
-  if (isCorrect) {
-    selectedOption.classList.add('correct');
-    feedback.textContent = "✔️ Correct! New Delhi is the capital.";
-    feedback.style.color = "#22c55e";
-  } else {
-    selectedOption.classList.add('wrong');
-    feedback.textContent = "❌ Oops! That's not correct.";
-    feedback.style.color = "#ef4444";
-    // highlight correct answer
-    options.forEach(o => {
-      if (o.getAttribute('data-correct') === "true") {
-        o.classList.add('correct');
-      }
-    });
-  }
-  options.forEach(o => o.disabled = true);
-  submitBtn.disabled = true;
-  setTimeout(() => { // allow retry after 2.2s
-    options.forEach(o => {
-      o.classList.remove('selected', 'correct', 'wrong');
-      o.disabled = false;
-    });
-    selectedOption = null;
-    answered = false;
-    submitBtn.disabled = true;
-    feedback.textContent = '';
-  }, 2200);
-});
-</script>
-
-  <!-- Popular Courses -->
-  <div class="section">
-    <h3>Popular Courses</h3>
-    <div class="grid">
-      <div class="card jee">2-Year JEE</div>
-      <div class="card neet">2-Year NEET</div>
-    </div>
-  </div>
-
-  <!-- Explore Courses -->
-  <div class="section explore">
-    <h3>Explore Courses <span style="font-size: 14px; color: gray;">(Class 3 - 13)</span></h3>
-    <div class="tags">
-      <div class="tag jee">JEE</div>
-      <div class="tag neet">NEET</div>
-      <div class="tag foundation">JEE/NEET Foundation</div>
-    </div>
+    <form class="modal-fields" id="loginForm" autocomplete="off">
+      <input type="text" id="nameInput" placeholder="Name" autocomplete="username" required>
+      <input type="password" id="passwordInput" placeholder="Password" autocomplete="current-password" required>
+      <button type="submit" class="login-btn">Login</button>
+      <div class="modal-error" id="modalError"></div>
+    </form>
   </div>
 
   <script>
-    // Sidebar toggle functionality
-    const menuIcon = document.getElementById('menuIcon');
-    const sidebar = document.getElementById('sidebar');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-    const closeSidebarBtn = document.getElementById('closeSidebar');
+    // Elements
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const slideMenu = document.getElementById('slideMenu');
+    const slideMenuOverlay = document.getElementById('slideMenuOverlay');
+    const menuCloseBtn = document.getElementById('menuCloseBtn');
+    const loginBtn = document.getElementById('loginBtn');
+    const slideMenuLoginBtn = document.getElementById('slideMenuLoginBtn');
+    const notesCard = document.getElementById('notesCard');
+    const supportBtn = document.getElementById('supportBtn');
+    const modal = document.getElementById('modal');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const loginForm = document.getElementById('loginForm');
+    const nameInput = document.getElementById('nameInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const modalError = document.getElementById('modalError');
+    const profileFrame = document.getElementById('profileFrame');
+    const defaultAvatar = document.getElementById('defaultAvatar');
 
-    function openSidebar() {
-      sidebar.classList.add('active');
-      sidebarOverlay.classList.add('active');
+    // Helper: open/close slide menu
+    function openSlideMenu() {
+      slideMenu.classList.add('active');
+      slideMenuOverlay.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
-    function closeSidebar() {
-      sidebar.classList.remove('active');
-      sidebarOverlay.classList.remove('active');
+    function closeSlideMenu() {
+      slideMenu.classList.remove('active');
+      slideMenuOverlay.classList.remove('active');
       document.body.style.overflow = '';
     }
-    menuIcon.addEventListener('click', openSidebar);
-    menuIcon.addEventListener('keydown', function(e) {
-      if (e.key === ' ' || e.key === 'Enter') openSidebar();
+
+    // Helper: open/close modal
+    function openModal() {
+      modal.classList.add('active');
+      modalOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      modalError.textContent = '';
+      modalError.classList.remove('active');
+      nameInput.value = '';
+      passwordInput.value = '';
+      // Reset profile frame/avatar
+      profileFrame.style.display = 'block';
+      defaultAvatar.style.display = 'none';
+      setTimeout(() => { nameInput.focus(); }, 350);
+    }
+    function closeModal() {
+      modal.classList.remove('active');
+      modalOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+      modalError.textContent = '';
+      modalError.classList.remove('active');
+    }
+
+    // Slide Menu events
+    hamburgerBtn.addEventListener('click', openSlideMenu);
+    slideMenuOverlay.addEventListener('click', closeSlideMenu);
+    menuCloseBtn.addEventListener('click', closeSlideMenu);
+    // Close slide menu on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeSlideMenu();
+        closeModal();
+      }
     });
-    sidebarOverlay.addEventListener('click', closeSidebar);
-    closeSidebarBtn.addEventListener('click', closeSidebar);
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeSidebar();
+
+    // Open modal from navbar or slide menu
+    loginBtn.addEventListener('click', openModal);
+    slideMenuLoginBtn.addEventListener('click', () => {
+      closeSlideMenu();
+      setTimeout(openModal, 350);
+    });
+
+    // Modal events
+    modalOverlay.addEventListener('click', closeModal);
+    modalCloseBtn.addEventListener('click', closeModal);
+
+    // Prevent modal/slide menu click from bubbling to overlay
+    modal.addEventListener('click', e => e.stopPropagation());
+    slideMenu.addEventListener('click', e => e.stopPropagation());
+
+    // Support Button: Call support
+    supportBtn.addEventListener('click', () => {
+      window.location.href = 'tel:+911234567890';
+    });
+
+    // Notes card: Go to notes.html (assuming it exists)
+    notesCard.addEventListener('click', () => {
+      window.location.href = 'notes.html';
+    });
+    notesCard.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        window.location.href = 'notes.html';
+      }
+    });
+
+    // Modal Form
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      modalError.textContent = '';
+      modalError.classList.remove('active');
+      const name = nameInput.value.trim();
+      const pass = passwordInput.value.trim();
+      if (!name || !pass) {
+        modalError.textContent = "Please enter both Name and Password.";
+        modalError.classList.add('active');
+        return false;
+      }
+      // Simulate login (replace with real backend as needed)
+      setTimeout(() => {
+        modalError.textContent = "Logged in! (This is a demo.)";
+        modalError.style.color = "#2563eb";
+        modalError.classList.add('active');
+        setTimeout(closeModal, 950);
+      }, 750);
+    });
+
+    // Profile image fallback
+    profileFrame.addEventListener('error', function() {
+      profileFrame.style.display = 'none';
+      defaultAvatar.style.display = 'block';
+    });
+
+    // Close modal/slide menu on outside click
+    document.addEventListener('click', function(e) {
+      // Modal
+      if (modal.classList.contains('active') && !modal.contains(e.target) && !modalOverlay.contains(e.target) && e.target !== loginBtn && e.target !== slideMenuLoginBtn) {
+        closeModal();
+      }
+      // Slide menu
+      if (slideMenu.classList.contains('active') && !slideMenu.contains(e.target) && !slideMenuOverlay.contains(e.target) && e.target !== hamburgerBtn) {
+        closeSlideMenu();
+      }
+    }, true);
+
+    // Accessibility: focus trap for modal
+    modal.addEventListener('keydown', function(e) {
+      if (e.key === 'Tab') {
+        const focusables = modal.querySelectorAll('input,button,[tabindex]:not([tabindex="-1"])');
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey ? document.activeElement === first : document.activeElement === last) {
+          e.preventDefault();
+          (e.shiftKey ? last : first).focus();
+        }
+      }
     });
   </script>
 </body>
 </html>
+      defaultAvatar.style.display = 'blo
