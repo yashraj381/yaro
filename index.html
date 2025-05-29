@@ -475,7 +475,42 @@
       </div>
     </div>
   </main>
+  <!-- 🔶 NCERT Banner Section with Kaushal Branding -->
+<section style="padding: 20px; background-color: #fff;">
+  <div style="text-align: center;">
+    <img src="kaushal_ncert_banner.png" alt="NCERT Solutions for 6th to 12th" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
+  </div>
+  <div style="margin-top: 20px; font-family: Poppins, sans-serif; color: #222; font-size: 16px; line-height: 1.6;">
+    <p>
+      To increase the learning of students who are in class from 6 to 12, NCERT created their textbook for all the subjects which includes subjects like Maths, Science, English, and Hindi up to Class 10. And the subjects for Class 11 and 12 it mainly covers Physics, Chemistry and Biology.
+    </p>
+    <p>
+      These books not only help you score good marks in your school exams but also make you ready for the upcoming entrance exams like <strong style="color: #5b5ce2;">NTSE</strong>, <strong style="color: #5b5ce2;">JEE</strong> and <strong style="color: #5b5ce2;">NEET</strong>.
+    </p>
+    <p>
+      Books are written in such a way that your concepts will improve a lot and help you build a solid base in subjects like Maths and Science.
+    </p>
+    <p>
+      All important points related to Maths and Science are covered extensively in the textbooks. Every CBSE school and even in a few state boards, NCERT books are recommended for students.
+    </p>
+  </div>
+</section>
+<section style="background: linear-gradient(to right, #a1c4fd, #c2e9fb); padding: 30px 20px; text-align: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); font-family: 'Poppins', sans-serif; margin: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <img src="kaushal.png" alt="Kaushal Logo" style="width: 40px; height: 40px;">
+    <img src="kaushal.png" alt="Kaushal Logo" style="width: 40px; height: 40px;">
+  </div>
 
+  <div style="margin: 20px auto;">
+    <img src="yaro-robot.png" alt="Yaro Robot" style="width: 100px; height: auto;">
+  </div>
+
+  <div>
+    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 10px; color: #1f2937;">Talk to Yaro 🤖</h2>
+    <p style="font-size: 16px; color: #374151; margin-bottom: 15px;">Your personal learning assistant. Ask questions, solve problems, and get instant help!</p>
+    <a href="yaro.html" style="display: inline-block; padding: 10px 20px; background-color: #2563eb; color: #fff; border-radius: 6px; text-decoration: none; font-weight: 600;">Start Chatting</a>
+  </div>
+</section>
   <!-- Floating Support Button -->
   <button class="support-btn" id="supportBtn" title="Call Support" aria-label="Call Support">
     <!-- Phone SVG -->
@@ -625,6 +660,22 @@
 
     // Modal Form
     loginForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  modalError.textContent = '';
+  modalError.classList.remove('active');
+  const name = nameInput.value.trim();
+  const pass = passwordInput.value.trim();
+  if (!name || !pass) {
+    modalError.textContent = "Please enter both Name and Password.";
+    modalError.classList.add('active');
+    return false;
+  }
+
+  // Save to localStorage and redirect to home.html
+  localStorage.setItem("username", name);
+  window.location.href = "home.html";
+});
+    loginForm.addEventListener('submit', function(e) {
       e.preventDefault();
       modalError.textContent = '';
       modalError.classList.remove('active');
@@ -636,12 +687,15 @@
         return false;
       }
       // Simulate login (replace with real backend as needed)
+      
       setTimeout(() => {
+        
         modalError.textContent = "Logged in! (This is a demo.)";
         modalError.style.color = "#2563eb";
         modalError.classList.add('active');
         setTimeout(closeModal, 950);
       }, 750);
+      
     });
 
     // Profile image fallback
