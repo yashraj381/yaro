@@ -2,394 +2,136 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Yaro Assistant - NCERT Solutions & Study Help</title>
-  <meta name="description" content="Yaro Assistant provides comprehensive NCERT solutions and educational resources. Get step-by-step answers and study help online!">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5724003587772553"
-     crossorigin="anonymous"></script>
+  <title>Talk to Yaro – Kaushal Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    :root {
-      --primary: #1d3557;
-      --secondary: #ff9933;
-      --accent: #138808;
-      --bg: #f7faff;
-      --card-bg: #fff;
-      --border: #e3e8f0;
-      --shadow: 0 8px 32px 0 rgba(60, 72, 110, 0.08);
-      --radius: 18px;
-      --font-main: 'Outfit', Arial, sans-serif;
-    }
-    html, body {
-      margin:0;padding:0;box-sizing:border-box;
-      background: var(--bg);
-      font-family: var(--font-main); color: var(--primary);
-      width: 100vw; min-height: 100vh; overflow-x: hidden;
-      font-size: 16px;
-    }
     body {
-      width: 100vw; min-height: 100vh;
-      display: flex; flex-direction: column;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #f3f4f6;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
     }
-    /* AppBar */
-    .appbar {
-      width: 100vw; height: 56px;
-      background: var(--card-bg);
-      box-shadow: 0 2px 12px rgba(44,60,110,0.09);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 16px;
-      border-bottom: 1.5px solid var(--border);
-      position: fixed; top: 0; left: 0; z-index: 100;
+    header {
+      background: #2563eb;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      position: relative;
     }
-    .appbar .logo-row {
-      display: flex; align-items: center; gap: 8px;
+    .back-btn {
+      position: absolute;
+      left: 15px;
+      top: 15px;
+      font-size: 18px;
+      text-decoration: none;
+      color: white;
     }
-    .appbar .logo-row img {
-      width: 32px; height: 32px; border-radius: 10px; border: 2px solid var(--secondary);
-      background: #fff;
+    .chat-box {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-    .appbar .brand-title {
-      font-size: 1.18rem; font-weight: 700;
-      background: linear-gradient(90deg, var(--secondary), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .msg.user {
+      align-self: flex-end;
+      background: #dbeafe;
+      padding: 10px;
+      border-radius: 10px 10px 0 10px;
+      max-width: 70%;
     }
-    .appbar .company {
-      font-size: .92rem; font-weight: 600; background: #e8ffd9; color: #138808;
-      border-radius: 8px; padding: 3px 9px; margin-left: 6px;
-      letter-spacing: 0.2px; display: inline-block;
+    .msg.yaro {
+      align-self: flex-start;
+      background: #e5e7eb;
+      padding: 10px;
+      border-radius: 10px 10px 10px 0;
+      max-width: 70%;
     }
-    .appbar .menu-btn {
-      background: var(--secondary); color: #fff; font-weight: 600;
-      border: none; border-radius: 8px; padding: 9px 14px; font-size: .98rem;
-      cursor: pointer; box-shadow: 0 2px 8px rgba(255,153,51,0.09);
-      transition: background 0.16s;
+    .input-box {
+      display: flex;
+      border-top: 1px solid #ccc;
+      padding: 10px;
+      background: white;
     }
-    .appbar .menu-btn:active { background: #ff7c00; }
-    /* Drawer/Side menu */
-    .drawer-backdrop {
-      display: none; position: fixed; left:0; top:0; right:0; bottom:0;
-      background: rgba(0,0,0,0.14); z-index: 9000;
+    input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
     }
-    .drawer-backdrop.active { display: block; }
-    .side-drawer {
-      position: fixed; top: 56px; right: -320px;
-      width: 90vw; max-width: 320px; 
-      height: calc(100vh - 112px); /* 56 appbar + 56 input+ad */
-      background: #fff; box-shadow: -2px 0 18px rgba(0,0,0,0.13);
-      z-index: 10000; /* BELOW input/ad (which are 10001+) */
-      display: flex; flex-direction: column; align-items: flex-start;
-      padding: 38px 14px 24px 14px; transition: right 0.36s cubic-bezier(.68,-0.55,.27,1.55);
-      box-sizing: border-box; overflow-y: auto; border-radius: 0 0 0 18px;
-    }
-    .side-drawer.active { right: 0; }
-    .side-drawer .drawer-close {
-      align-self: flex-end; font-size: 30px; background: none; border: none; color: #888; cursor: pointer; margin-bottom: 20px;
-    }
-    .side-drawer .drawer-title { font-size: 1.13rem; font-weight: 700; color: var(--primary); margin-bottom: 8px;}
-    .side-drawer .drawer-link {
-      margin-top: 13px; background: var(--secondary); color: #fff; padding: 11px 14px; font-size: 1rem;
-      border: none; border-radius: 12px; cursor: pointer; font-weight: 600; width: 100%; text-align: left;
-      box-shadow: 0 2px 10px rgba(255, 153, 51, 0.07); transition: background 0.19s;
-    }
-    .side-drawer .drawer-link:active { background: #ff7c00; }
-    /* Splash/Loading screen */
-    .splash-screen {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: #fff;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      z-index: 9999; animation: fadeOut 1.7s ease 2.5s forwards;
-    }
-    .splash-screen img { width: 64px; margin-bottom: 10px; filter: drop-shadow(0 4px 14px #e0e7ff);}
-    .splash-screen h1 { font-size: 1.6rem; font-weight: 700; color: #333; margin-bottom: 3px;}
-    .splash-powered { color: #ff9933; font-size: 1rem; margin-bottom: 10px; font-weight: 600;}
-    .splash-company { font-size: 0.97rem; color: #1d3557; margin-bottom: 8px; font-weight: 500;}
-    .loader-bar { display: flex; gap: 8px; margin-top: 7px;}
-    .loader-bar div { width: 11px; height: 11px; border-radius: 50%; animation: bounce 1.2s infinite both;}
-    .loader-bar div:nth-child(1) { background: #ff9933; animation-delay: 0s;}
-    .loader-bar div:nth-child(2) { background: #fff; border: 1.5px solid #000; animation-delay: 0.2s;}
-    .loader-bar div:nth-child(3) { background: #138808; animation-delay: 0.4s;}
-    @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
-    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
-    /* Chat Mobile Layout */
-    .chat-section {
-      width: 100vw; max-width: 100vw; margin: 0 auto;
-      background: var(--card-bg);
-      box-shadow: var(--shadow);
-      border-radius: 0; margin-top: 56px;
-      display: flex; flex-direction: column; min-height: calc(100vh - 56px - 112px);
-      border: none; position: relative; overflow: hidden; box-sizing: border-box;
-    }
-    .chat-container {
-      flex: 1; padding: 18px 3vw 7px 3vw;
-      display: flex; flex-direction: column; overflow-y: auto;
-      border-radius: 0; box-sizing: border-box; width: 100vw; max-width: 100vw;
-    }
-    .message {
-      width: fit-content; max-width: 82vw; padding: 11px 14px; margin-bottom: 11px; border-radius: 15px;
-      font-size: 0.99rem; line-height: 1.58; word-break: break-word;
-      box-shadow: 0 2px 8px rgba(44, 60, 110, 0.04); border: 1px solid #f3f3f3; box-sizing: border-box; overflow-wrap: break-word;
-    }
-    .message.user {
-      align-self: flex-end; background: linear-gradient(90deg, #e9f5dc 80%, #cbfce9 100%); color: #205015;
-      border-bottom-right-radius: 6px; border-top-right-radius: 20px; border-top-left-radius: 20px; border-bottom-left-radius: 18px; border: 1px solid #b2f5ea0b;
-    }
-    .message.bot {
-      align-self: flex-start; background: #f4f7fb; color: #33405b;
-      border-bottom-left-radius: 6px; border-top-right-radius: 20px; border-top-left-radius: 20px; border-bottom-right-radius: 18px; border: 1px solid #e0e7ff;
-    }
-    .typing-indicator { display: flex; align-items: center; gap: 5px; margin-left: 10px; margin-bottom: 10px;}
-    .typing-indicator .dot { width: 9px; height: 9px; border-radius: 50%; background-color: #bbb; animation: bounce 1.2s infinite both;}
-    .typing-indicator .dot:nth-child(2) { animation-delay: 0.2s; }
-    .typing-indicator .dot:nth-child(3) { animation-delay: 0.4s; }
-    .chat-section .center-prompt {
-      position: absolute; left: 50%; top: 48%; transform: translate(-50%, -50%);
-      font-size: 1.01rem; font-weight: 600; color: #818181;
-      padding: 10px 18px; border-radius: 12px; border: 2px solid #e3e8f0; background: #f8fafc;
-      box-shadow: 0 0 12px rgba(255, 153, 51, 0.08); animation: pulseGlow 3s infinite;
-      user-select: none; pointer-events: none; z-index: 2;
-    }
-    @keyframes pulseGlow {
-      0% {box-shadow: 0 0 10px rgba(255, 153, 51, 0.11);}
-      50% {box-shadow: 0 0 18px rgba(255, 255, 255, 0.13);}
-      100% {box-shadow: 0 0 10px rgba(19, 136, 8, 0.04);}
-    }
-    /* Input Area - fixed just above banner ad */
-    .input-area {
-      display: flex; gap: 7px; padding: 8px 2vw 8px 2vw; border-top: 1.5px solid var(--border);
-      background: var(--input-bg); z-index: 10001; border-radius: 0;
-      position: fixed; left: 0; right: 0; bottom: 56px;
-      width: 100vw; max-width: 100vw; box-sizing: border-box; align-items: center;
-    }
-    .input-area input {
-      flex: 1; padding: 11px 11px; border-radius: 12px; border: 1.5px solid #d2d8e0;
-      outline: none; background: #fff; font-size: 0.98rem; margin-right: 3px;
-      transition: border-color 0.18s; min-width: 0; color: #1d3557; max-width: 100vw; box-sizing: border-box;
-    }
-    .input-area input:focus { border-color: var(--secondary); }
-    .input-area button {
-      padding: 9px 12px; border: none; background: var(--primary); color: white; border-radius: 10px;
-      cursor: pointer; font-size: 0.98rem; font-weight: 600; transition: background 0.18s;
-      display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 10px rgba(44, 60, 110, 0.09);
-      max-width: 32vw; min-width: 34px; overflow: hidden;
-    }
-    .input-area button:active { background: var(--secondary); color: #fff;}
-    #mic-launch img { width: 21px; height: 21px; filter: invert(1) brightness(1.4);}
-    /* Banner Ad */
-    #banner-ad {
-      width: 100vw; min-width: 0; max-width: 100vw;
-      display: flex; justify-content: center; align-items: center;
-      min-height: 48px; max-height: 56px; background: transparent;
-      z-index: 10001; position: fixed; bottom: 0; left: 0;
-      transition: bottom 0.3s; overflow-x: hidden; padding: 0;
-    }
-    #banner-ad .close-banner-btn {
-      position: absolute; right: 10px; top: 7px; background: #fff;
-      border: 1px solid #ccc; border-radius: 50%; width: 22px; height: 22px;
-      font-size: 16px; font-weight: bold; color: #666; cursor: pointer; z-index: 10002;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.07); display: flex; align-items: center;
-      justify-content: center; line-height: 22px; padding: 0;
-    }
-    #banner-slot {
-      width: 100vw; height: 50px; display: flex; align-items: center; justify-content: center;
-      overflow: hidden; min-width: 0; padding: 0; margin: 0;
-    }
-    @media (max-width: 400px) {
-      .appbar, .input-area, #banner-ad, .chat-section, .chat-container { width: 100vw; }
-      #banner-slot { width: 100vw; }
-      .side-drawer { width: 98vw; max-width: 98vw;}
+    button {
+      margin-left: 10px;
+      padding: 10px 15px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <!-- Splash/Loading Screen -->
-  <div class="splash-screen" id="splash">
-    <img src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg" alt="India Flag" />
-    <h1>Yaro</h1>
-    <div class="splash-powered">Powered by Yashraj Pvt Ltd</div>
-    <div class="splash-company">Your Reliable Study Assistant</div>
-    <div class="loader-bar">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
+
+  <header>
+    <a href="home.html" class="back-btn">← Home</a>
+    Talk to Yaro 🤖
+  </header>
+
+  <div class="chat-box" id="chatBox">
+    <div class="msg yaro">Hello! I'm Yaro, your learning assistant. Ask me anything!</div>
   </div>
-  <!-- App Bar -->
-  <div class="appbar">
-    <div class="logo-row">
-      <img src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg" alt="Yaro Logo">
-      <span class="brand-title">Yaro</span>
-      <span class="company">Yashraj Pvt Ltd</span>
-    </div>
-    <button class="menu-btn" id="openDrawerBtn" aria-label="Open menu">Menu</button>
-  </div>
-  <!-- Drawer/Side Menu -->
-  <div class="drawer-backdrop" id="drawerBackdrop"></div>
-  <nav class="side-drawer" id="sideDrawer" aria-label="Side menu">
-    <button class="drawer-close" id="closeDrawerBtn" aria-label="Close">&times;</button>
-    <div class="drawer-title">Quick Links</div>
-    <button class="drawer-link" onclick="window.location.href='ncert.html'">
-      📚 NCERT Solutions
-    </button>
-  </nav>
-  <!-- Chat Section -->
-  <section class="chat-section">
-    <div class="center-prompt" id="centerPrompt">What can I help you with?</div>
-    <div class="chat-container" id="chat"></div>
-  </section>
-  <!-- Input bar, fixed above ad -->
-  <div class="input-area">
-    <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off" />
-    <button onclick="sendMessage()" id="sendBtn">Send</button>
-    <button id="mic-launch" onclick="openVoicePage()" title="Voice Assistant">
-      <img src="https://img.icons8.com/ios-filled/24/ffffff/microphone.png" alt="Mic" />
-    </button>
-  </div>
-  <!-- Banner Ad (fixed at bottom) -->
-  <div id="banner-ad">
-    <button class="close-banner-btn" id="closeBannerAd" aria-label="Close banner">&times;</button>
-    <div id="banner-slot">
-      <!-- Google AdSense -->
-      <ins class="adsbygoogle"
-           style="display:block;width:100vw;min-width:0;"
-           data-ad-client="ca-pub-5724003587772553"
-           data-ad-slot="3853956818"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </div>
-  </div>
+
+  <form class="input-box" id="yaroForm">
+    <input type="text" id="userInput" placeholder="Type your question..." />
+    <button type="submit">Send</button>
+  </form>
+
   <script>
-    // Splash screen logic
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.getElementById('splash').style.display = 'none';
-      }, 1800);
-    });
-    // Drawer/Side menu logic
-    const openDrawerBtn = document.getElementById('openDrawerBtn');
-    const sideDrawer = document.getElementById('sideDrawer');
-    const drawerBackdrop = document.getElementById('drawerBackdrop');
-    const closeDrawerBtn = document.getElementById('closeDrawerBtn');
-    openDrawerBtn.addEventListener('click', () => {
-      sideDrawer.classList.add('active');
-      drawerBackdrop.classList.add('active');
-    });
-    closeDrawerBtn.addEventListener('click', () => {
-      sideDrawer.classList.remove('active');
-      drawerBackdrop.classList.remove('active');
-    });
-    drawerBackdrop.addEventListener('click', () => {
-      sideDrawer.classList.remove('active');
-      drawerBackdrop.classList.remove('active');
-    });
-    // Banner logic (button always works and mobile friendly)
-    function closeBannerAd() {
-      const banner = document.getElementById('banner-ad');
-      banner.style.opacity = '0';
-      setTimeout(function() {
-        banner.style.display = 'none';
-      }, 250);
-    }
-    document.getElementById('closeBannerAd').onclick = closeBannerAd;
-    // Open Voice Assistant page (placeholder)
-    function openVoicePage() {
-      window.location.href = 'voice.html';
-    }
-    // Chat/Assistant logic
-    const chat = document.getElementById('chat');
-    const userInput = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const centerPrompt = document.getElementById("centerPrompt");
-    const customQandA = {
-      "hello": "Hi there! How can I help you today?",
-      "who are you": "I am Yaro, your personal assistant!",
-      "how are you": "I'm always doing great! Thanks for asking.",
-      "bye": "Goodbye! Have a great day!",
-      "ncert": "You can access all NCERT solutions by clicking the menu and selecting 'NCERT Solutions'.",
-      "cbse": "I can help you with CBSE related questions. Please specify your subject or question!"
-    };
-    let userMemory = { name: null };
-    userInput.addEventListener('keydown', function(e){
-      if(e.key === 'Enter') sendMessage();
-    });
-    function addMessage(text, sender = 'user') {
-      const msg = document.createElement('div');
-      msg.className = `message ${sender}`;
-      msg.innerText = text;
-      chat.appendChild(msg);
-      chat.scrollTop = chat.scrollHeight;
-    }
-    function showTyping(callback) {
-      const indicator = document.createElement('div');
-      indicator.className = 'typing-indicator';
-      indicator.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
-      chat.appendChild(indicator);
-      chat.scrollTop = chat.scrollHeight;
-      setTimeout(() => {
-        chat.removeChild(indicator);
-        callback();
-      }, 850);
-    }
-    function getClosestAnswer(userText) {
-      const text = userText.trim().toLowerCase();
-      for (let key in customQandA) {
-        if (text.includes(key)) return customQandA[key];
-      }
-      return null;
-    }
-    function assistantResponse(text) {
-      if (/my name is (.+)/i.test(text)) {
-        const name = text.match(/my name is (.+)/i)[1].trim();
-        userMemory.name = name;
-        return `Nice to meet you, ${name}!`;
-      }
-      if (/\btime\b/.test(text.toLowerCase())) {
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        return `Time: ${time}`;
-      }
-      if (/\bdate\b/.test(text.toLowerCase())) {
-        const date = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
-        return `Date: ${date}`;
-      }
-      if (/^calculate\s+(.+)/i.test(text)) {
-        let expr = text.match(/^calculate\s+(.+)/i)[1];
-        try {
-          if(/[^-()\d/*+. ]/.test(expr)) return "Sorry, I can only calculate basic math expressions.";
-          let result = Function('"use strict";return (' + expr + ')')();
-          if (isNaN(result)) return "Sorry, I couldn't compute that.";
-          return `Result: ${result}`;
-        } catch {
-          return "Sorry, that calculation is invalid.";
-        }
-      }
-      let answer = getClosestAnswer(text);
-      if (answer) return answer;
-      if (userMemory.name && /\bmy name\b/.test(text.toLowerCase())) {
-        return `I remember, your name is ${userMemory.name}!`;
-      }
-      return "Sorry, I don't understand that yet. For NCERT solutions, type your question or use the menu!";
-    }
-    function sendMessage() {
-      const text = userInput.value.trim();
-      if (!text) return;
-      addMessage(text, 'user');
-      userInput.value = '';
-      centerPrompt.style.display = "none";
-      showTyping(() => {
-        const reply = assistantResponse(text);
-        addMessage(reply, 'bot');
+    const form = document.getElementById("yaroForm");
+    const input = document.getElementById("userInput");
+    const chatBox = document.getElementById("chatBox");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const userText = input.value.trim();
+      if (!userText) return;
+
+      const userMsg = document.createElement("div");
+      userMsg.className = "msg user";
+      userMsg.textContent = userText;
+      chatBox.appendChild(userMsg);
+
+      const yaroMsg = document.createElement("div");
+      yaroMsg.className = "msg yaro";
+      yaroMsg.textContent = "🤖 Thinking...";
+      chatBox.appendChild(yaroMsg);
+
+      input.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // 🔁 Replace this URL with your actual Render API endpoint
+      fetch("https://yaro-assistant.onrender.com/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: userText })
+      })
+      .then(res => res.json())
+      .then(data => {
+        yaroMsg.textContent = data.reply || "Sorry, I couldn't understand.";
+      })
+      .catch(err => {
+        yaroMsg.textContent = "⚠️ Error connecting to Yaro server.";
       });
-    }
+    });
   </script>
+
 </body>
-<!-- Add this inside your HTML, preferably in the footer or at the bottom of the page body -->
-<footer style="text-align:center; color:#888; font-size:0.97rem; margin: 20px 0;">
-  Powered by Yashraj Pvt Ltd
-</footer>
 </html>
