@@ -1,0 +1,235 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drawing & Art | Kaushal</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Segoe UI',sans-serif;
+    }body{
+  background:#f6f8fb;
+  color:#222;
+}
+
+/* Header */
+.hero{
+  background:linear-gradient(135deg,#ff8c00,#ffb347);
+  color:white;
+  padding:80px 20px;
+  text-align:center;
+}
+
+.hero h1{
+  font-size:42px;
+  margin-bottom:15px;
+}
+
+.hero p{
+  max-width:800px;
+  margin:auto;
+  font-size:18px;
+  opacity:0.95;
+}
+
+/* Container */
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:60px 20px;
+}
+
+/* Info Section */
+.info{
+  background:white;
+  border-radius:18px;
+  padding:40px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+  margin-bottom:60px;
+}
+
+.info h2{
+  font-size:30px;
+  color:#ff8c00;
+  margin-bottom:15px;
+}
+
+.info p{
+  font-size:17px;
+  line-height:1.8;
+  color:#444;
+}
+
+/* Skills */
+.skills{
+  display:flex;
+  flex-wrap:wrap;
+  gap:15px;
+  margin-top:25px;
+}
+
+.skill{
+  background:#fff3e0;
+  color:#ff8c00;
+  padding:10px 20px;
+  border-radius:25px;
+  font-weight:600;
+  font-size:14px;
+}
+
+/* Gallery */
+.gallery-section{
+  margin-top:60px;
+}
+
+.gallery-section h2{
+  text-align:center;
+  font-size:32px;
+  margin-bottom:10px;
+}
+
+.gallery-section p{
+  text-align:center;
+  color:#555;
+  margin-bottom:40px;
+}
+
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+
+.gallery img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.12);
+  transition:transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery img:hover{
+  transform:scale(1.05);
+  box-shadow:0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* Tips */
+.tips{
+  background:white;
+  border-radius:18px;
+  padding:40px;
+  margin-top:70px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+.tips h2{
+  font-size:28px;
+  margin-bottom:20px;
+}
+
+.tips ul{
+  list-style:none;
+  line-height:2;
+  font-size:16px;
+}
+
+.tips li::before{
+  content:'🎨';
+  margin-right:10px;
+}
+
+/* CTA */
+.cta{
+  text-align:center;
+  margin:80px 0 40px;
+}
+
+.cta h2{
+  font-size:28px;
+  margin-bottom:20px;
+}
+
+.cta button{
+  background:#ff8c00;
+  color:white;
+  border:none;
+  padding:14px 36px;
+  border-radius:30px;
+  font-size:16px;
+  cursor:pointer;
+}
+
+footer{
+  text-align:center;
+  padding:25px;
+  font-size:14px;
+  color:#777;
+}
+
+@media(max-width:600px){
+  .hero h1{font-size:30px;}
+}
+
+  </style>
+</head>
+<body>  <!-- HERO -->  <section class="hero">
+    <h1>Drawing & Creative Art</h1>
+    <p>Drawing is not just art — it builds imagination, focus, confidence, and emotional expression in children.</p>
+  </section>  <div class="container"><!-- INFO -->
+<div class="info">
+  <h2>Why Drawing is Important</h2>
+  <p>
+    Drawing helps students express their thoughts visually, improves hand–eye coordination, and boosts creativity. It also plays an important role in emotional development and concentration.
+  </p>
+
+  <div class="skills">
+    <div class="skill">Creativity</div>
+    <div class="skill">Imagination</div>
+    <div class="skill">Focus</div>
+    <div class="skill">Confidence</div>
+    <div class="skill">Fine Motor Skills</div>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<section class="gallery-section">
+  <h2>Student Art Gallery</h2>
+  <p>Explore beautiful artworks created by our students</p>
+
+  <div class="gallery">
+    <!-- Replace image paths with your uploads -->
+    <img src="images/drawing1.jpg" alt="Drawing">
+    <img src="images/drawing2.jpg" alt="Drawing">
+    <img src="images/drawing3.jpg" alt="Drawing">
+    <img src="images/drawing4.jpg" alt="Drawing">
+    <img src="images/drawing5.jpg" alt="Drawing">
+    <img src="images/drawing6.jpg" alt="Drawing">
+  </div>
+</section>
+
+<!-- TIPS -->
+<div class="tips">
+  <h2>Practice Tips for Students</h2>
+  <ul>
+    <li>Practice drawing at least 15 minutes daily</li>
+    <li>Start with simple shapes and outlines</li>
+    <li>Observe real-life objects carefully</li>
+    <li>Do not fear mistakes — art is about expression</li>
+    <li>Try different tools like pencils, colors, and crayons</li>
+  </ul>
+</div>
+
+<!-- CTA -->
+<div class="cta">
+  <h2>Every child is an artist. Let them express!</h2>
+  <button onclick="history.back()">⬅ Back to Activities</button>
+</div>
+
+  </div>  <footer>
+    Kaushal believes in nurturing creativity along with academic excellence.<br>
+    Powered by Yashraj Pawar
+  </footer></body>
+</html>
