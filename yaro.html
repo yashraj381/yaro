@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Yaro — Your Smart Learning Assistant</title>
+  <meta name="description" content="Yaro — A frontend AI assistant for students. Built by Yashraj Pawar." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220aa;
+      --glass: rgba(255,255,255,0.05);
+      --accent1:#7b9cff;
+      --accent2:#7bedc7;
+      --text:#e6eef8;
+      --muted:#9fb0c8;
+      --glass-2: rgba(255,255,255,0.03);
+      --radius:14px;
+      --glass-border: rgba(255,255,255,0.06);
+      --light-bg:#f6f9fc;
+      --light-text:#0b1220;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background: linear-gradient(135deg, rgba(12,14,23,1) 0%, rgba(10,12,20,1) 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow:hidden;
+    }
+    .splash{
+      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(180deg, rgba(4,6,12,1), rgba(6,9,18,1));
+      z-index:1000; transition:opacity .6s ease;
+    }
+    .splash.hidden{opacity:0;pointer-events:none;display:none}
+    .splash-inner{ text-align:center; color:var(--text) }
+    .kaushal-logo{
+      font-weight:800; font-size:28px; display:flex; align-items:center; gap:8px; justify-content:center;
+    }
+    .kaushal-logo .kc{ color:var(--accent1) }
+    .kaushal-logo .cc{ color:var(--accent2); font-weight:600; font-size:14px; margin-top:6px; }
+    .glow-circle{
+      margin:18px auto 4px; width:88px; height:88px; border-radius:50%;
+      background: radial-gradient(circle at 30% 20%, rgba(123,156,255,0.28), transparent 20%),
+                  radial-gradient(circle at 70% 80%, rgba(123,237,199,0.18), transparent 25%),
+                  linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      box-shadow:0 8px 40px rgba(123,156,255,0.08), 0 30px 80px rgba(0,0,0,0.6);
+      transform:scale(0.9);
+      animation:glow 2.4s linear infinite;
+    }
+    @keyframes glow{ 0%{transform:scale(.95)}50%{transform:scale(1.05)}100%{transform:scale(.95)} }
+    .yaro-title{ font-size:54px; letter-spacing:6px; margin:6px 0 0; font-weight:800; color:var(--text) }
+    .yaro-sub{ color:var(--muted); margin:6px 0 12px; }
+    .loader-dots{display:flex;gap:10px;justify-content:center}
+    .loader-dots div{width:10px;height:10px;background:var(--accent1);border-radius:50%;opacity:.9;animation:ld .9s infinite}
+    .loader-dots div:nth-child(2){animation-delay:.1s; background:var(--accent2)}
+    .loader-dots div:nth-child(3){animation-delay:.2s; background:linear-gradient(90deg,var(--accent1),var(--accent2))}
+    @keyframes ld{0%{transform:translateY(0); opacity:.4}50%{transform:translateY(-8px); opacity:1}100%{transform:translateY(0); opacity:.4}}
+    .hidden{display:none}
+    .app{display:flex;height:100vh; width:100vw; position:relative; overflow:hidden}
+    .sidebar{
+      width:280px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-right:1px solid var(--glass-border); padding:18px; display:flex; flex-direction:column; gap:12px;
+      backdrop-filter: blur(8px);
+    }
+    .brand{display:flex;gap:10px;align-items:center}
+    .brand-logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800}
+    .brand-name{font-weight:700}
+    .brand-sub{font-size:12px;color:var(--muted)}
+    .side-btn{width:100%; padding:10px;border-radius:10px;border: none;background:transparent;color:var(--text);cursor:pointer;text-align:left}
+    .side-btn:hover{background:rgba(255,255,255,0.02)}
+    .chat-list{list-style:none;padding:0;margin:0;overflow:auto;max-height:50vh}
+    .chat-list li{padding:8px;border-radius:10px;margin-bottom:8px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);cursor:pointer}
+    .chat-list li small{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+    .main{flex:1;display:flex;flex-direction:column}
+    .main-header{display:flex;justify-content:space-between;align-items:center;padding:22px;border-bottom:1px solid var(--glass-border)}
+    .header-left h2{margin:0}
+    .header-right{display:flex;gap:8px}
+    .btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text);cursor:pointer}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.4)}
+    .small{padding:8px 10px;font-size:13px}
+    .live{background:linear-gradient(90deg,var(--accent1),var(--accent2));border:none;color:#041123;font-weight:700;margin-left:8px}
+    .send{background:linear-gradient(90deg,var(--accent1),var(--accent2));border:none;color:#041123;font-weight:700;margin-left:6px}
+    .chat-area{flex:1;display:flex;flex-direction:column;padding:18px;gap:12px;position:relative;overflow:hidden}
+    .messages{flex:1;overflow:auto;padding-right:6px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+    .msg{max-width:78%;padding:12px;border-radius:12px;line-height:1.35;box-shadow:0 6px 18px rgba(2,6,12,0.6);opacity:0;transform:translateY(12px);animation:msgIn .35s forwards}
+    @keyframes msgIn{to{opacity:1;transform:none}}
+    .msg.user{margin-left:auto;background:linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03)}
+    .msg.assistant{background:linear-gradient(180deg, rgba(123,156,255,0.12), rgba(123,237,199,0.06));border:1px solid rgba(255,255,255,0.04)}
+    .msg .meta{font-size:12px;color:var(--muted);margin-bottom:6px}
+    .typing{display:flex;gap:6px;align-items:center}
+    .typing .dot{width:8px;height:8px;border-radius:50%;background:rgba(0,0,0,0.12);animation:td .9s infinite}
+    .typing .dot:nth-child(1){background:rgba(255,255,255,0.6);animation-delay:0}
+    .typing .dot:nth-child(2){background:rgba(255,255,255,0.4);animation-delay:.12s}
+    .typing .dot:nth-child(3){background:rgba(255,255,255,0.2);animation-delay:.25s}
+    @keyframes td{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+    .composer{display:flex;gap:8px;align-items:center;padding:12px;border-top:1px solid var(--glass-border);background:linear-gradient(180deg,transparent, rgba(0,0,0,0.02))}
+    .input{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text)}
+    .suggested{display:flex;gap:8px;padding:12px;flex-wrap:wrap}
+    .chip{padding:8px 12px;border-radius:999px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));cursor:pointer;color:var(--muted);font-size:14px}
+    .panel{width:360px;padding:18px;border-left:1px solid var(--glass-border);background:linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02))}
+    .panel.hidden{display:none}
+    .particles{position:fixed;right:0;bottom:0;left:280px;top:0;z-index:0;mix-blend-mode:screen;pointer-events:none}
+    @media (max-width:900px){
+      .sidebar{display:none}
+      .particles{left:0}
+      .panel{display:none}
+      body{overflow:auto}
+    }
+    body.light{
+      background: linear-gradient(135deg, #f6fbff, #f0f8ff);
+      color:var(--light-text)
+    }
+    body.light .sidebar, body.light .panel{background:rgba(255,255,255,0.8);backdrop-filter:none}
+    body.light .brand-logo{color:#fff}
+    body.light .msg.user{background:#f1f6fb;color:var(--light-text)}
+    body.light .msg.assistant{background:linear-gradient(180deg,#fff2,#fff2);color:var(--light-text)}
+    a{color:var(--accent2)}
+    /* small adjustments for single-file demo */
+    .brand-logo { font-size: 18px; color: #041123; }
+    .kaushal-logo .kc, .kaushal-logo .cc { font-size: 20px; }
+  </style>
+</head>
+<body>
+  <!-- Splash / Loader -->
+  <div id="splash" class="splash">
+    <div class="splash-inner">
+      <div class="logo-wrap">
+        <div class="kaushal-logo">
+          <span class="kc">Kaushal</span>
+          <span class="cc">Classes</span>
+        </div>
+        <div class="glow-circle" aria-hidden="true"></div>
+      </div>
+      <h1 class="yaro-title">YARO</h1>
+      <p class="yaro-sub">Your Smart Learning Assistant</p>
+      <div class="loader-area">
+        <div class="loader-dots">
+          <div></div><div></div><div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- App container -->
+  <div id="app" class="app hidden">
+    <!-- Left sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="brand">
+          <div class="brand-logo">Y</div>
+          <div>
+            <div class="brand-name">Yaro</div>
+            <div class="brand-sub">Smart Learning Assistant</div>
+          </div>
+        </div>
+        <button id="newChatBtn" class="btn side-btn">+ New Chat</button>
+      </div>
+
+      <div class="sidebar-middle">
+        <div class="section-title">Chats</div>
+        <ul id="chatList" class="chat-list"></ul>
+      </div>
+
+      <div class="sidebar-bottom">
+        <button id="settingsBtn" class="btn side-btn">Settings</button>
+        <button id="aboutBtn" class="btn side-btn">About Yaro</button>
+      </div>
+    </aside>
+
+    <!-- Main area -->
+    <main class="main">
+      <!-- Header -->
+      <header class="main-header">
+        <div class="header-left">
+          <h2 id="chatTitle">Welcome to Yaro</h2>
+          <p id="chatSubtitle">Your Smart Learning Assistant — Try "Who made you?"</p>
+        </div>
+        <div class="header-right">
+          <button id="quickWeather" class="btn small">Weather</button>
+          <button id="quickTime" class="btn small">Time</button>
+          <button id="quickDate" class="btn small">Date</button>
+          <button id="quickWiki" class="btn small">Wikipedia</button>
+          <button id="quickStudy" class="btn small">Study Help</button>
+        </div>
+      </header>
+
+      <!-- Chat container -->
+      <section class="chat-area">
+        <div id="messages" class="messages"></div>
+
+        <div class="composer">
+          <input id="messageInput" class="input" placeholder="Type a message, e.g., 'Who made you?', 'Weather in Mumbai', 'Tell me about Newton'..." />
+          <button id="sendBtn" class="btn send">Send</button>
+          <button id="liveTalk" class="btn live">🎙 Live Talk</button>
+        </div>
+
+        <div class="suggested">
+          <div class="chip" data-suggest="Who made you?">Who made you?</div>
+          <div class="chip" data-suggest="Weather in Delhi">Weather in Delhi</div>
+          <div class="chip" data-suggest="Time">Time</div>
+          <div class="chip" data-suggest="What is India?">What is India?</div>
+          <div class="chip" data-suggest="Help me with algebra">Study: Algebra</div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Right panel: settings / about -->
+    <aside id="panel" class="panel hidden">
+      <div id="panelContent"></div>
+    </aside>
+
+    <!-- Floating particles canvas -->
+    <canvas id="particles" class="particles"></canvas>
+  </div>
+
+  <script>
+    // app.js — Single-file Yaro
+    // Author: Yashraj Pawar (creator metadata included in responses)
+
+    // --- Utilities ---
+    const $ = (sel, ctx=document) => ctx.querySelector(sel);
+    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+
+    /* Simple language detection:
+       - If Devanagari present -> Hindi
+       - If mostly Latin -> English
+       - If both -> mixed
+    */
+    function detectLanguage(text){
+      const devanagari = /[\\u0900-\\u097F]/;
+      const hasDeva = devanagari.test(text);
+      const latin = /[A-Za-z]/;
+      const hasLatin = latin.test(text);
+      if(hasDeva && hasLatin) return 'mixed';
+      if(hasDeva) return 'hi';
+      return 'en';
+    }
+
+    function respondCreator(lang){
+      if(lang === 'hi') return "Mujhe Yashraj Pawar ne banaya hai.";
+      if(lang === 'mixed') return "I was created by Yashraj Pawar. / Mujhe Yashraj Pawar ne banaya hai.";
+      return "I was created by Yashraj Pawar.";
+    }
+
+    function timeString(locale='en-US'){
+      const d = new Date();
+      return d.toLocaleTimeString(locale, {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    }
+    function dateString(locale='en-US'){
+      const d = new Date();
+      return d.toLocaleDateString(locale, {year:'numeric',month:'long',day:'numeric'});
+    }
+
+    const STORAGE_KEY = 'yaro_chats_v1';
+    const SETTINGS_KEY = 'yaro_settings_v1';
+
+    const KNOWLEDGE = {
+      math: {
+        'what is pythagoras': "Pythagoras theorem states that in a right-angled triangle, the square of the hypotenuse equals the sum of squares of the other two sides. (a² + b² = c²).",
+        'solve 2+2': "2 + 2 = 4",
+        'what is algebra': "Algebra is a branch of mathematics dealing with symbols and the rules for manipulating those symbols."
+      },
+      science: {
+        'what is photosynthesis': "Photosynthesis is the process by which green plants use sunlight to synthesize foods from carbon dioxide and water.",
+        'what is gravity': "Gravity is a force by which a planet or other body draws objects toward its center. On Earth, it gives weight to physical objects."
+      },
+      english: {
+        'what is noun': "A noun is a word that functions as the name of a specific object, person, place, or idea.",
+        'what is verb': "A verb is a word used to describe an action, state, or occurrence."
+      },
+      gk: {
+        'who is mahatma gandhi': "Mahatma Gandhi was an Indian lawyer and anti-colonial nationalist who led the non-violent resistance movement against British rule."
+      }
+    };
+
+    // --- UI references ---
+    const splash = $('#splash');
+    const app = $('#app');
+    const messages = $('#messages');
+    const input = $('#messageInput');
+    const sendBtn = $('#sendBtn');
+    const newChatBtn = $('#newChatBtn');
+    const chatListEl = $('#chatList');
+    const panel = $('#panel');
+    const panelContent = $('#panelContent');
+    const settingsBtn = $('#settingsBtn');
+    const aboutBtn = $('#aboutBtn');
+    const quickWeather = $('#quickWeather');
+    const quickTime = $('#quickTime');
+    const quickDate = $('#quickDate');
+    const quickWiki = $('#quickWiki');
+    const quickStudy = $('#quickStudy');
+    const liveTalk = $('#liveTalk');
+    const chatTitle = $('#chatTitle');
+    const chatSubtitle = $('#chatSubtitle');
+
+    // --- State ---
+    let chats = []; // each chat: {id, title, messages:[{role, text, ts}]}
+    let currentChatId = null;
+    let settings = {
+      theme: 'dark' // or 'light'
+    };
+
+    // --- Initialization & splash sequence ---
+    function loadSettings(){
+      try{
+        const s = localStorage.getItem(SETTINGS_KEY);
+        if(s) Object.assign(settings, JSON.parse(s));
+      }catch(e){}
+      applyTheme();
+    }
+    function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
+    function applyTheme(){
+      if(settings.theme === 'light') document.body.classList.add('light');
+      else document.body.classList.remove('light');
+    }
+    function loadChats(){
+      try{
+        const s = localStorage.getItem(STORAGE_KEY);
+        if(s) chats = JSON.parse(s);
+      }catch(e){ chats = []; }
+      if(!chats || chats.length === 0){
+        const c = createNewChat("Welcome");
+        addMessage(c.id, 'assistant', "Namaste! I am Yaro — your Smart Learning Assistant. Ask me anything. Try 'Who made you?' or 'Weather in Mumbai'.");
+        saveChats();
+        currentChatId = c.id;
+      } else {
+        currentChatId = chats[0].id;
+      }
+      renderChatList();
+      openChat(currentChatId);
+    }
+    function saveChats(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(chats)); }
+
+    function createNewChat(title = "New Chat"){
+      const id = 'c_'+Date.now();
+      const chat = { id, title, messages: [], createdAt: Date.now() };
+      chats.unshift(chat);
+      saveChats();
+      renderChatList();
+      return chat;
+    }
+
+    function renderChatList(){
+      chatListEl.innerHTML = '';
+      chats.forEach(chat => {
+        const li = document.createElement('li');
+        li.tabIndex=0;
+        li.dataset.id = chat.id;
+        li.innerHTML = `<strong>${escapeHtml(chat.title)}</strong><small>${chat.messages.length>0 ? escapeHtml(chat.messages[chat.messages.length-1].text.slice(0,50)) : ''}</small>`;
+        li.addEventListener('click', ()=> openChat(chat.id));
+        chatListEl.appendChild(li);
+      });
+    }
+
+    function startApp(){
+      setTimeout(()=> {
+        splash.classList.add('hidden');
+        app.classList.remove('hidden');
+        initParticles();
+        loadSettings();
+        loadChats();
+        simulateAssistantTyping("Hello! I'm Yaro — your Smart Learning Assistant. Ask me for weather, time, Wikipedia summaries, or study help.", currentChatId, 900);
+      }, 2200);
+    }
+
+    // --- Chat rendering ---
+    function openChat(chatId){
+      const chat = chats.find(c=>c.id===chatId);
+      if(!chat) return;
+      currentChatId = chatId;
+      $$('.chat-list li').forEach(li => li.classList.toggle('active', li.dataset.id === chatId));
+      chatTitle.textContent = chat.title || "Yaro";
+      chatSubtitle.textContent = "Chat started " + new Date(chat.createdAt).toLocaleString();
+      messages.innerHTML = '';
+      chat.messages.forEach(m => renderMessage(m));
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function addMessage(chatId, role, text){
+      const chat = chats.find(c=>c.id===chatId);
+      if(!chat) return;
+      const msg = { role, text, ts: Date.now() };
+      chat.messages.push(msg);
+      saveChats();
+      if(chatId === currentChatId) renderMessage(msg);
+      renderChatList();
+      messages.scrollTop = messages.scrollHeight + 200;
+      return msg;
+    }
+
+    function renderMessage(msg){
+      const div = document.createElement('div');
+      div.className = 'msg ' + (msg.role==='user' ? 'user' : 'assistant');
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.textContent = `${msg.role === 'user' ? 'You' : 'Yaro'} • ${new Date(msg.ts).toLocaleTimeString()}`;
+      div.appendChild(meta);
+      const body = document.createElement('div');
+      body.className = 'body';
+      body.innerHTML = formatMessageText(msg.text);
+      div.appendChild(body);
+      messages.appendChild(div);
+    }
+
+    function formatMessageText(text){
+      if(!text) return '';
+      const urlRegex = /((https?:\/\/[^\\s]+))/g;
+      const formatted = escapeHtml(text).replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+      return formatted.replace(/\\n/g,'<br>');
+    }
+
+    function showTyping(){
+      const t = document.createElement('div');
+      t.className = 'msg assistant typing-msg';
+      t.innerHTML = `<div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+      messages.appendChild(t);
+      messages.scrollTop = messages.scrollHeight;
+      return t;
+    }
+
+    function simulateAssistantTyping(text, chatId, baseDelay=700){
+      const typingEl = showTyping();
+      const thinkDelay = baseDelay + Math.min(2000, text.length * 15);
+      setTimeout(()=>{
+        typingEl.remove();
+        addMessage(chatId, 'assistant', text);
+      }, thinkDelay);
+    }
+
+    // --- Intent detection and response generation ---
+    function handleUserInput(raw){
+      const text = (raw||'').trim();
+      if(!text) return;
+      addMessage(currentChatId, 'user', text);
+      input.value = '';
+      const lang = detectLanguage(text);
+      const lc = text.toLowerCase();
+
+      const creatorPatterns = [
+        /who (made|created) you/i, /who is your creator/i, /who made you\\?/i,
+        /kisne banaya/i, /tumhe kisne banaya/i, /kisne banaya hai/i
+      ];
+      if(creatorPatterns.some(p => p.test(text))){
+        const resp = respondCreator(lang);
+        simulateAssistantTyping(resp, currentChatId);
+        return;
+      }
+
+      if(/\\btime\\b/i.test(lc) || /samay/i.test(lc) || /current time/i.test(lc) || /samay kya/i.test(lc)){
+        const locale = lang==='hi' ? 'hi-IN' : 'en-US';
+        const resp = lang==='hi' ? `Samay: ${timeString(locale)}` : `Current time: ${timeString(locale)}`;
+        simulateAssistantTyping(resp, currentChatId);
+        return;
+      }
+      if(/\\bdate\\b/i.test(lc) || /date kya/i.test(lc) || /date/i.test(lc) || /tarikh/i.test(lc)){
+        const locale = lang==='hi' ? 'hi-IN' : 'en-US';
+        const resp = lang==='hi' ? `Aaj ki tareekh: ${dateString(locale)}` : `Today's date: ${dateString(locale)}`;
+        simulateAssistantTyping(resp, currentChatId);
+        return;
+      }
+
+      if(/\\bweather\\b/i.test(lc) || /mausam/i.test(lc) || /mausam kya/i.test(lc) || /^weather in /i.test(lc) || /^weather at /i.test(lc)){
+        const m = lc.match(/weather in ([a-z\\s]+)|weather at ([a-z\\s]+)|mausam in ([a-z\\s]+)|mausam ([a-z\\s]+)/i);
+        let city = null;
+        if(m){
+          city = (m[1] || m[2] || m[3] || m[4] || '').trim();
+          if(city === '') city = null;
+        }
+        fetchWeatherResponse(city, lang);
+        return;
+      }
+
+      if(/who is |what is |tell me about |kya hai|kaun hai/i.test(lc)){
+        const wikiQuery = text.replace(/who is |what is |tell me about |kya hai |kaun hai |bataye /i,'').trim();
+        if(wikiQuery.length > 0){
+          fetchWikipediaSummary(wikiQuery, lang);
+          return;
+        }
+      }
+
+      const subjectKey = Object.keys(KNOWLEDGE).find(sub => lc.includes(sub) || lc.includes('study') || lc.includes('help'));
+      if(subjectKey){
+        const keys = Object.keys(KNOWLEDGE[subjectKey]);
+        const matched = keys.find(k => lc.includes(k));
+        if(matched){
+          simulateAssistantTyping(KNOWLEDGE[subjectKey][matched], currentChatId);
+          return;
+        } else {
+          const resp = (lang==='hi')
+            ? `Main ${subjectKey} mein madad kar sakta hoon. Kya aap kisi vishesh topic ke baare mein padhna chahenge?`
+            : `I can help with ${subjectKey}. Would you like help with any particular topic?`;
+          simulateAssistantTyping(resp, currentChatId);
+          return;
+        }
+      }
+
+      if(text.length < 120){
+        fetchWikipediaSummary(text, lang);
+        return;
+      }
+
+      const reply = (lang === 'hi') ? "Mujhe maaf kijiye — main samajh nahin paaya. Aap thoda aur vistar se bata sakte hain?" : "Sorry — I didn't understand that. Could you rephrase or ask in another way?";
+      simulateAssistantTyping(reply, currentChatId);
+    }
+
+    // --- Weather: geocode via Nominatim, then Open-Meteo ---
+    async function fetchWeatherResponse(city, lang='en'){
+      const locale = lang==='hi' ? 'hi-IN' : 'en-US';
+      try{
+        let lat, lon, place;
+        if(city){
+          const q = encodeURIComponent(city);
+          const url = `https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1`;
+          const res = await fetch(url, { headers:{ 'Accept': 'application/json' }});
+          const data = await res.json();
+          if(!data || data.length===0){
+            const msg = (lang==='hi') ? `Mujhe ${city} ka location nahin mila.` : `I couldn't find the location for "${city}".`;
+            simulateAssistantTyping(msg, currentChatId);
+            return;
+          }
+          lat = data[0].lat; lon = data[0].lon; place = data[0].display_name;
+        } else {
+          if(navigator.geolocation){
+            const pos = await new Promise((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(resolve, reject, {timeout:8000});
+            }).catch(e=>null);
+            if(pos && pos.coords){
+              lat = pos.coords.latitude; lon = pos.coords.longitude; place = 'your location';
+            } else {
+              const msg = (lang==='hi') ? "Kripya kshetra bataiye ya browser se location allow kijiye." : "Please provide a city or allow location access in your browser.";
+              simulateAssistantTyping(msg, currentChatId);
+              return;
+            }
+          } else {
+            const msg = (lang==='hi') ? "Aapke browser mein geolocation uplabdh nahin hai. Kripya sheher bataiye." : "Geolocation is not available in your browser. Please specify a city.";
+            simulateAssistantTyping(msg, currentChatId);
+            return;
+          }
+        }
+
+        const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`;
+        const wres = await fetch(weatherUrl);
+        const wjson = await wres.json();
+        if(!wjson || !wjson.current_weather){
+          const msg = (lang==='hi') ? "Mausam jankari praapt nahi hui." : "Couldn't get weather information right now.";
+          simulateAssistantTyping(msg, currentChatId);
+          return;
+        }
+        const cw = wjson.current_weather;
+        const wc = weatherCodeToText(cw.weathercode, lang);
+        const temp = cw.temperature;
+        const wind = cw.windspeed;
+        const textResp = (lang==='hi')
+          ? `Mausam — ${place}:\n${wc}\nTaapman: ${temp}°C\nHawa: ${wind} km/h`
+          : `Weather — ${place}:\n${wc}\nTemperature: ${temp}°C\nWind: ${wind} km/h`;
+        simulateAssistantTyping(textResp, currentChatId, 800);
+      } catch (err){
+        console.error(err);
+        const msg = (lang==='hi') ? "Mausam prapt karte samay kuchh galat hua." : "Something went wrong while fetching weather.";
+        simulateAssistantTyping(msg, currentChatId);
+      }
+    }
+
+    function weatherCodeToText(code, lang='en'){
+      const en = {
+        0:'Clear sky', 1:'Mainly clear', 2:'Partly cloudy', 3:'Overcast',
+        45:'Fog',48:'Depositing rime fog',
+        51:'Light drizzle',53:'Moderate drizzle',55:'Dense drizzle',
+        61:'Slight rain',63:'Moderate rain',65:'Heavy rain',
+        71:'Slight snow',73:'Moderate snow',75:'Heavy snow',
+        80:'Rain showers',81:'Moderate showers',82:'Violent showers',
+        95:'Thunderstorm',96:'Thunderstorm with hail'
+      };
+      const hi = {
+        0:'Spasht aasman', 1:'Mukhya roop se spasht', 2:'Adha badli wala', 3:'Poorn badli wala',
+        45:'Kohra',48:'Rime fog',51:'Halki boondabari',53:'Madhyam boondabari',55:'Ghan boondabari',
+        61:'Halki baarish',63:'Madhyam baarish',65:'Tez baarish',
+        71:'Halki barf',73:'Madhyam barf',75:'Tez barf',
+        80:'Baarish ke jhatke',81:'Madhyam jhatke',82:'Tez jhatke',
+        95:'Bijli gharajne',96:'Bijli aur hail'
+      };
+      if(lang==='hi') return hi[code] || 'Mausam jankari';
+      return en[code] || 'Weather';
+    }
+
+    // --- Wikipedia summary ---
+    async function fetchWikipediaSummary(query, lang='en'){
+      const wikiLang = (lang==='hi') ? 'hi' : 'en';
+      const title = encodeURIComponent(query);
+      const url = `https://${wikiLang}.wikipedia.org/api/rest_v1/page/summary/${title}`;
+      try{
+        simulateAssistantTyping((lang==='hi') ? `Main ${query} ke baare mein dekh raha hoon...` : `Let me look up ${query}...`, currentChatId, 600);
+        const res = await fetch(url);
+        if(!res.ok){
+          if(wikiLang === 'hi'){
+            const engUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${title}`;
+            const res2 = await fetch(engUrl);
+            if(res2.ok){
+              const data2 = await res2.json();
+              const summary2 = data2.extract || "No summary available.";
+              simulateAssistantTyping(summary2, currentChatId, 900);
+              return;
+            }
+          }
+          throw new Error('No page');
+        }
+        const data = await res.json();
+        if(data.extract){
+          simulateAssistantTyping(data.extract, currentChatId, 900);
+        } else {
+          simulateAssistantTyping((lang==='hi') ? "Kshama kijiye, Wikipedia par saar uplabdh nahi hai." : "Sorry, Wikipedia summary not available.", currentChatId);
+        }
+      }catch(err){
+        console.error(err);
+        simulateAssistantTyping((lang==='hi') ? "Wikipedia prapt karne mein samasya hui." : "Failed to fetch Wikipedia summary.", currentChatId);
+      }
+    }
+
+    // --- Event bindings ---
+    sendBtn.addEventListener('click', ()=> handleUserInput(input.value));
+    input.addEventListener('keydown', (e)=> { if(e.key === 'Enter'){ e.preventDefault(); handleUserInput(input.value); } });
+    newChatBtn.addEventListener('click', ()=> {
+      const c = createNewChat("Chat " + (chats.length+1));
+      currentChatId = c.id;
+      openChat(currentChatId);
+    });
+    settingsBtn.addEventListener('click', ()=> showPanel('settings'));
+    aboutBtn.addEventListener('click', ()=> showPanel('about'));
+
+    quickWeather.addEventListener('click', ()=> {
+      const city = prompt("Enter city (leave empty to use browser location):");
+      handleUserInput(city ? `Weather in ${city}` : `Weather`);
+    });
+    quickTime.addEventListener('click', ()=> handleUserInput('Time'));
+    quickDate.addEventListener('click', ()=> handleUserInput('Date'));
+    quickWiki.addEventListener('click', ()=> {
+      const q = prompt("Search Wikipedia for:");
+      if(q) handleUserInput(`What is ${q}`);
+    });
+    quickStudy.addEventListener('click', ()=> handleUserInput('Study help'));
+
+    $$('.chip').forEach(chip=>{
+      chip.addEventListener('click', ()=> {
+        const t = chip.dataset.suggest;
+        input.value = t;
+        handleUserInput(t);
+      });
+    });
+
+    liveTalk.addEventListener('click', ()=>{
+      simulateAssistantTyping("Live Talk is Coming Soon. This UI is prepared for voice/video addition in the future.", currentChatId, 800);
+    });
+
+    function showPanel(name){
+      panel.classList.remove('hidden');
+      panelContent.innerHTML = '';
+      if(name === 'about'){
+        panelContent.innerHTML = `
+          <h3>About Yaro</h3>
+          <p><strong>Yaro AI Assistant</strong></p>
+          <p>Created by: <strong>Yashraj Pawar</strong></p>
+          <p>Powered by: <strong>Kaushal Classes</strong></p>
+          <hr />
+          <p>Yaro is a frontend-only assistant that simulates an intelligent chat experience using built-in knowledge and public APIs (Wikipedia & Open-Meteo).</p>
+        `;
+      } else if(name === 'settings'){
+        panelContent.innerHTML = `
+          <h3>Settings</h3>
+          <div>
+            <label><input type="radio" name="theme" value="dark" ${settings.theme==='dark' ? 'checked' : ''}/> Dark</label><br/>
+            <label><input type="radio" name="theme" value="light" ${settings.theme==='light' ? 'checked' : ''}/> Light</label>
+          </div>
+          <hr/>
+          <button id="clearHistory" class="btn">Clear Chat History</button>
+        `;
+        panelContent.querySelectorAll('input[name="theme"]').forEach(el=>{
+          el.addEventListener('change', (e)=>{
+            settings.theme = e.target.value;
+            applyTheme();
+            saveSettings();
+          });
+        });
+        panelContent.querySelector('#clearHistory').addEventListener('click', ()=>{
+          if(confirm('Clear all chat history?')){
+            chats = [];
+            localStorage.removeItem(STORAGE_KEY);
+            loadChats();
+            panel.classList.add('hidden');
+          }
+        });
+      }
+    }
+
+    document.addEventListener('click', (e)=>{
+      if(panel.classList.contains('hidden')) return;
+      if(!panel.contains(e.target) && !e.target.matches('#settingsBtn') && !e.target.matches('#aboutBtn')){
+        panel.classList.add('hidden');
+      }
+    });
+
+    // --- Particles (floating) ---
+    function initParticles(){
+      const canvas = $('#particles');
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = window.innerWidth - (window.innerWidth > 900 ? 280 : 0);
+      let h = canvas.height = window.innerHeight;
+      const particles = [];
+      const colors = ['rgba(123,156,255,0.12)','rgba(123,237,199,0.08)','rgba(255,255,255,0.04)'];
+      for(let i=0;i<60;i++){
+        particles.push({
+          x: Math.random()*w,
+          y: Math.random()*h,
+          r: 8 + Math.random()*18,
+          dx: -0.15 + Math.random()*0.3,
+          dy: -0.05 + Math.random()*0.1,
+          color: colors[Math.floor(Math.random()*colors.length)],
+          life: Math.random()*1000
+        });
+      }
+      function render(){
+        ctx.clearRect(0,0,w,h);
+        particles.forEach(p=>{
+          p.x += p.dx;
+          p.y += p.dy;
+          p.life += 1;
+          if(p.x < -50) p.x = w + 50;
+          if(p.x > w + 50) p.x = -50;
+          if(p.y < -50) p.y = h + 50;
+          if(p.y > h + 50) p.y = -50;
+          const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r*2.2);
+          g.addColorStop(0, p.color);
+          g.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+          ctx.fill();
+        });
+        requestAnimationFrame(render);
+      }
+      render();
+      window.addEventListener('resize', ()=> {
+        w = canvas.width = window.innerWidth - (window.innerWidth > 900 ? 280 : 0);
+        h = canvas.height = window.innerHeight;
+      });
+    }
+
+    function escapeForChat(s){
+      return s.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    startApp();
+
+    // Expose simple handle for debugging
+    window.Yaro = {
+      handle: handleUserInput,
+      chats,
+      settings
+    };
+  </script>
+</body>
+</html>
